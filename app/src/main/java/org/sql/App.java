@@ -31,8 +31,7 @@ public class App {
     panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
     try {
-      con = DriverManager.getConnection(url, user, password);
-      System.out.println("Connected Successfully!");
+      connect();
       for (String hardwareType : hardwareTypes) {
 
         String query = "SELECT " + hardwareType + ".name, " + hardwareType +
@@ -71,6 +70,16 @@ public class App {
   // return null;
   // }
   // }
+
+  public Boolean connect() {
+    try {
+      con = DriverManager.getConnection(url, user, password);
+      System.out.println("Connected Successfully!");
+      return true;
+    } catch (SQLException e) {
+      return false;
+    }
+  }
 
   public static String compatible() {
     return "test";
