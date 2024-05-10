@@ -19,8 +19,8 @@ dependencies {
     // Use JUnit Jupiter for testing.
     testImplementation(libs.junit.jupiter)
 
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher");
-    implementation 'org.mariadb.jdbc:mariadb-java-client:$VERSION';
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    implementation("org.mariadb.jdbc:mariadb-java-client:3.3.3")
 
     // This dependency is used by the application.
     implementation(libs.guava)
@@ -35,7 +35,7 @@ java {
 
 application {
     // Define the main class for the application.
-    mainClass = "org.example.App"
+    mainClass = "org.sql.App"
 }
 
 tasks.named<Test>("test") {
