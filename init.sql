@@ -138,7 +138,7 @@ CREATE TABLE IF NOT EXISTS ssd (
   FOREIGN KEY (brandID) REFERENCES brand(ID)
 );
 
-CREATE TABLE IF NOT EXISTS ccase (
+CREATE TABLE IF NOT EXISTS case (
   ID INT NOT NULL AUTO_INCREMENT,
   brandID INT NOT NULL,
   name VARCHAR(50),
@@ -147,6 +147,70 @@ CREATE TABLE IF NOT EXISTS ccase (
   PRIMARY KEY (ID),
   FOREIGN KEY (brandID) REFERENCES brand(ID)
 );
+
+-- Step 1: Add entries for the PC cases
+INSERT INTO ccase (brandID, name, form, coolers_max) VALUES
+(1, 'CORSAIR 6500D Airflow Mid-Tower Dual Chamber - Black', 'Mid-Tower', NULL),
+(1, 'CORSAIR 6500D Airflow Mid-Tower Dual Chamber - White', 'Mid-Tower', NULL),
+(1, 'CORSAIR 5000D CORE Airflow Mid-Tower ATX PC Case - White', 'Mid-Tower', NULL),
+(1, 'CORSAIR 5000D CORE Airflow Mid-Tower ATX PC Case - Black', 'Mid-Tower', NULL),
+(1, 'CORSAIR 3000D AIRFLOW Mid-Tower PC Case - White', 'Mid-Tower', NULL),
+(1, 'CORSAIR 3000D RGB AIRFLOW Mid-Tower PC Case - Black', 'Mid-Tower', NULL),
+(1, 'CORSAIR 3000D RGB AIRFLOW Mid-Tower PC Case - White', 'Mid-Tower', NULL),
+(1, 'CORSAIR 3000D AIRFLOW Mid-Tower PC Case - Black', 'Mid-Tower', NULL),
+(1, 'CORSAIR iCUE 4000D RGB AIRFLOW Mid-Tower Case, True White', 'Mid-Tower', NULL),
+(1, 'CORSAIR 4000D Airflow Tempered Glass Mid-Tower - Black', 'Mid-Tower', NULL),
+(1, 'CORSAIR iCUE 5000D RGB AIRFLOW Mid-Tower Case, Black', 'Mid-Tower', NULL),
+(1, 'CORSAIR iCUE 5000D RGB AIRFLOW Mid-Tower Case, True White', 'Mid-Tower', NULL),
+(1, 'CORSAIR 5000D Airflow Tempered Glass Mid-Tower - Black', 'Mid-Tower', NULL),
+(1, 'CORSAIR iCUE 5000T RGB Tempered Glass Mid-Tower ATX PC Case - Black', 'Mid-Tower', NULL),
+(1, 'CORSAIR iCUE 5000T RGB Tempered Glass Mid-Tower ATX PC Case - White', 'Mid-Tower', NULL),
+(1, 'CORSAIR 7000D Airflow Tempered Glass Full-Tower - Black', 'Full-Tower', NULL),
+(1, 'CORSAIR Obsidian Series 1000D Super-Tower Case', 'Super-Tower', NULL),
+(2, 'Antec DF700 Flux', 'Mid-Tower', NULL),
+(2, 'Antec P120 Crystal', 'Mid-Tower', NULL),
+(2, 'ASUS ROG Strix Helios', 'Mid-Tower', NULL),
+(2, 'ASUS TUF Gaming GT501', 'Mid-Tower', NULL),
+(2, 'be quiet! Dark Base Pro 900 Black rev. 2', 'Full-Tower', NULL),
+(2, 'be quiet! Pure Base 500DX Black', 'Mid-Tower', NULL),
+(2, 'be quiet! Silent Base 802 Window Black', 'Mid-Tower', NULL),
+(2, 'Cooler Master Cosmos C700M', 'Full-Tower', NULL),
+(2, 'Cooler Master MasterBox TD500 Mesh White', 'Mid-Tower', NULL),
+(2, 'Cooler Master MasterCase H500M', 'Mid-Tower', NULL),
+(2, 'Fractal Design Define 7 Dark Tempered Glass Black', 'Mid-Tower', NULL),
+(2, 'Fractal Design Meshify 2 Black', 'Mid-Tower', NULL),
+(2, 'Fractal Design Meshify 2 XL Light Tempered Glass Black', 'Mid-Tower', NULL),
+(2, 'Lian Li Lancool II Mesh Performance', 'Mid-Tower', NULL),
+(2, 'Lian Li Lancool III Black', 'Mid-Tower', NULL),
+(2, 'Lian Li O11 Air Mini Black 7-slot', 'Mid-Tower', NULL),
+(2, 'Lian Li PC-O11 Dynamic Black', 'Mid-Tower', NULL),
+(2, 'Lian Li O11 Dynamic EVO Black', 'Mid-Tower', NULL),
+(2, 'Lian Li O11 Dynamic EVO White', 'Mid-Tower', NULL),
+(2, 'Lian Li PC-O11 Dynamic Mini Black 7-slot', 'Mid-Tower', NULL),
+(2, 'Lian Li PC-O11 Dynamic XL Black', 'Mid-Tower', NULL),
+(2, 'Lian Li PC-O11 Dynamic XL Silver', 'Mid-Tower', NULL),
+(2, 'MSI MPG Gungnir 110R', 'Mid-Tower', NULL),
+(2, 'MSI MPG Velox 100R', 'Mid-Tower', NULL),
+(2, 'NZXT H710i Matte Black', 'Mid-Tower', NULL),
+(2, 'NZXT H710i Matte White', 'Mid-Tower', NULL),
+(2, 'Phanteks Eclipse P360A Black', 'Mid-Tower', NULL),
+(2, 'Phanteks Enthoo 719 Satin Black', 'Full-Tower', NULL),
+(2, 'Phanteks Eclipse P500A DRGB Black', 'Mid-Tower', NULL),
+(2, 'Thermaltake Core P3 Tempered Glass Edition', 'Mid-Tower', NULL),
+(2, 'Thermaltake Divider 500 TG ARGB', 'Mid-Tower', NULL),
+(2, 'Thermaltake The Tower 900', 'Full-Tower', NULL),
+(2, 'Thermaltake View 51 Tempered Glass Snow ARGB Edition', 'Full-Tower', NULL),
+(2, 'Thermaltake View 71 Tempered Glass RGB Edition', 'Full-Tower', NULL),
+(1, 'CORSAIR 2500D Airflow Micro ATX Dual Chamber - Black', 'Micro ATX', NULL),
+(1, 'CORSAIR 2500D Airflow Micro ATX Dual Chamber - White', 'Micro ATX', NULL),
+(1, 'CORSAIR 2000D AIRFLOW Mini-ITX PC Case - White', 'Mini ITX', NULL),
+(1, 'CORSAIR 2000D AIRFLOW Mini-ITX PC Case - Black', 'Mini ITX', NULL),
+(1, 'CORSAIR 2000D RGB AIRFLOW Mini-ITX PC Case - Black', 'Mini ITX', NULL),
+(1, 'CORSAIR 2000D RGB AIRFLOW Mini-ITX PC Case - White', 'Mini ITX', NULL);
+
+-- Step 2: Create a new table for the case query results
+CREATE TABLE
+
 
 CREATE TABLE IF NOT EXISTS fan (
   ID INT NOT NULL AUTO_INCREMENT,
