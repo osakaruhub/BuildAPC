@@ -31,3 +31,5 @@ Erstellen einer HTML Template für die Website.
 SQL Querry erweitert.
 
 SQL Refiniert. Einträge übersichtlicher gemacht.
+
+Wichgtige besprechung mit Oskar.
