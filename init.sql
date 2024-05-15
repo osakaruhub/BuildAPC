@@ -9,6 +9,20 @@ CREATE TABLE IF NOT EXISTS brand (
   UNIQUE (name)
 );
 
+INSERT INTO brand (name) VALUES
+('PowerColor'),
+('ASUS'),
+('Zotac'),
+('MSI'),
+('XFX'),
+('Gigabyte'),
+('Intel'),
+('Palit'),
+('Gainward'),
+('ASRock'),
+('NVIDIA'),
+('AMD');
+
 CREATE TABLE IF NOT EXISTS user (
   userID INT NOT NULL AUTO_INCREMENT,
   name VARCHAR(30) NOT NULL,
@@ -53,6 +67,35 @@ CREATE TABLE IF NOT EXISTS gpu (
   PRIMARY KEY (ID),
   FOREIGN KEY (brandID) REFERENCES brand(ID)
 );
+
+INSERT INTO gpu (brandID, line, name, clock_speed, IO) VALUES
+((SELECT ID FROM brand WHERE name='PowerColor'), 'Red Devil', 'Radeon RX 7800 XT', 2210, 'HDMI, DP'),
+((SELECT ID FROM brand WHERE name='ASUS'), 'ROG Strix', 'GeForce RTX 4080 SUPER OC Edition', 2505, 'HDMI, DP'),
+((SELECT ID FROM brand WHERE name='Zotac'), 'Gaming', 'GeForce RTX 4080 SUPER Trinity Black Edition', 2565, 'HDMI, DP'),
+((SELECT ID FROM brand WHERE name='MSI'), 'GeForce', 'RTX 4080 16GB Gaming Trio', 2505, 'HDMI, DP'),
+((SELECT ID FROM brand WHERE name='XFX'), 'Speedster MERC', '310 Radeon RX 7900 XT', 2300, 'HDMI, DP'),
+((SELECT ID FROM brand WHERE name='Zotac'), 'Gaming', 'GeForce RTX 4070 Ti AMP Extreme AIRO', 2700, 'HDMI, DP'),
+((SELECT ID FROM brand WHERE name='ASUS'), 'ROG Strix', 'GeForce RTX 4090 White OC Edition', 2610, 'HDMI, DP'),
+((SELECT ID FROM brand WHERE name='Gigabyte'), 'GeForce', 'RTX 4080 SUPER Gaming OC 16G', 2535, 'HDMI, DP'),
+((SELECT ID FROM brand WHERE name='ASUS'), 'ROG Strix', 'GeForce RTX 4090 OC Edition', 2610, 'HDMI, DP'),
+((SELECT ID FROM brand WHERE name='Gigabyte'), 'GeForce', 'RTX 4090 Gaming OC 24G', 2610, 'HDMI, DP'),
+((SELECT ID FROM brand WHERE name='ASUS'), 'TUF Gaming', 'Radeon RX 7900 XTX OC', 2300, 'HDMI, DP'),
+((SELECT ID FROM brand WHERE name='MSI'), 'GeForce', 'RTX 4080 SUPER 16GB Gaming X Trio', 2505, 'HDMI, DP'),
+((SELECT ID FROM brand WHERE name='ASUS'), 'TUF Gaming', 'Radeon RX 7800 XT OC', 2210, 'HDMI, DP'),
+((SELECT ID FROM brand WHERE name='Gigabyte'), 'Aorus', 'Radeon RX 7900 XTX Elite 24G', 2300, 'HDMI, DP'),
+((SELECT ID FROM brand WHERE name='ASUS'), 'Dual', 'Radeon RX 7800 XT OC Edition', 2210, 'HDMI, DP'),
+((SELECT ID FROM brand WHERE name='Zotac'), 'Gaming', 'GeForce RTX 4090 Trinity OC', 2610, 'HDMI, DP'),
+((SELECT ID FROM brand WHERE name='PowerColor'), 'Radeon', 'RX 7900 XTX Hellhound', 2300, 'HDMI, DP'),
+((SELECT ID FROM brand WHERE name='AMD'), NULL, 'Radeon RX 7900 XTX', 2300, 'HDMI, DP'),
+((SELECT ID FROM brand WHERE name='MSI'), 'GeForce', 'RTX 4090 Suprim X 24G', 2610, 'HDMI, DP'),
+((SELECT ID FROM brand WHERE name='Zotac'), 'Gaming', 'GeForce RTX 4070 Ti Trinity', 2700, 'HDMI, DP'),
+((SELECT ID FROM brand WHERE name='Intel'), 'Arc', 'A770 Limited Edition', 2100, 'HDMI, DP'),
+((SELECT ID FROM brand WHERE name='Palit'), 'GeForce', 'RTX 4090 GameRock OC', 2610, 'HDMI, DP'),
+((SELECT ID FROM brand WHERE name='Gainward'), 'GeForce', 'RTX 4070 Ti SUPER Panther OC', 2700, 'HDMI, DP'),
+((SELECT ID FROM brand WHERE name='MSI'), 'GeForce', 'RTX 4070 Ti Gaming X Trio 12G', 2700, 'HDMI, DP'),
+((SELECT ID FROM brand WHERE name='ASRock'), 'Radeon', 'RX 7900 XTX Taichi 24GB OC', 2300, 'HDMI, DP'),
+((SELECT ID FROM brand WHERE name='Gigabyte'), 'Aorus', 'GeForce RTX 4090 Master 24G', 2610, 'HDMI, DP'),
+((SELECT ID FROM brand WHERE name='MSI'), 'GeForce', 'RTX 4090 Gaming X Trio 24G', 2610, 'HD))
 
 CREATE TABLE IF NOT EXISTS ram (
   ID INT NOT NULL AUTO_INCREMENT,
@@ -140,48 +183,7 @@ CREATE TABLE IF NOT EXISTS gpu_query (
   PRIMARY KEY (queryID)
 );
 
-INSERT INTO brand (name) VALUES
-('PowerColor'),
-('ASUS'),
-('Zotac'),
-('MSI'),
-('XFX'),
-('Gigabyte'),
-('Intel'),
-('Palit'),
-('Gainward'),
-('ASRock'),
-('NVIDIA'),
-('AMD');
 
-INSERT INTO gpu (brandID, line, name, clock_speed, IO) VALUES
-((SELECT ID FROM brand WHERE name='PowerColor'), 'Red Devil', 'Radeon RX 7800 XT', 2210, 'HDMI, DP'),
-((SELECT ID FROM brand WHERE name='ASUS'), 'ROG Strix', 'GeForce RTX 4080 SUPER OC Edition', 2505, 'HDMI, DP'),
-((SELECT ID FROM brand WHERE name='Zotac'), 'Gaming', 'GeForce RTX 4080 SUPER Trinity Black Edition', 2565, 'HDMI, DP'),
-((SELECT ID FROM brand WHERE name='MSI'), 'GeForce', 'RTX 4080 16GB Gaming Trio', 2505, 'HDMI, DP'),
-((SELECT ID FROM brand WHERE name='XFX'), 'Speedster MERC', '310 Radeon RX 7900 XT', 2300, 'HDMI, DP'),
-((SELECT ID FROM brand WHERE name='Zotac'), 'Gaming', 'GeForce RTX 4070 Ti AMP Extreme AIRO', 2700, 'HDMI, DP'),
-((SELECT ID FROM brand WHERE name='ASUS'), 'ROG Strix', 'GeForce RTX 4090 White OC Edition', 2610, 'HDMI, DP'),
-((SELECT ID FROM brand WHERE name='Gigabyte'), 'GeForce', 'RTX 4080 SUPER Gaming OC 16G', 2535, 'HDMI, DP'),
-((SELECT ID FROM brand WHERE name='ASUS'), 'ROG Strix', 'GeForce RTX 4090 OC Edition', 2610, 'HDMI, DP'),
-((SELECT ID FROM brand WHERE name='Gigabyte'), 'GeForce', 'RTX 4090 Gaming OC 24G', 2610, 'HDMI, DP'),
-((SELECT ID FROM brand WHERE name='ASUS'), 'TUF Gaming', 'Radeon RX 7900 XTX OC', 2300, 'HDMI, DP'),
-((SELECT ID FROM brand WHERE name='MSI'), 'GeForce', 'RTX 4080 SUPER 16GB Gaming X Trio', 2505, 'HDMI, DP'),
-((SELECT ID FROM brand WHERE name='ASUS'), 'TUF Gaming', 'Radeon RX 7800 XT OC', 2210, 'HDMI, DP'),
-((SELECT ID FROM brand WHERE name='Gigabyte'), 'Aorus', 'Radeon RX 7900 XTX Elite 24G', 2300, 'HDMI, DP'),
-((SELECT ID FROM brand WHERE name='ASUS'), 'Dual', 'Radeon RX 7800 XT OC Edition', 2210, 'HDMI, DP'),
-((SELECT ID FROM brand WHERE name='Zotac'), 'Gaming', 'GeForce RTX 4090 Trinity OC', 2610, 'HDMI, DP'),
-((SELECT ID FROM brand WHERE name='PowerColor'), 'Radeon', 'RX 7900 XTX Hellhound', 2300, 'HDMI, DP'),
-((SELECT ID FROM brand WHERE name='AMD'), NULL, 'Radeon RX 7900 XTX', 2300, 'HDMI, DP'),
-((SELECT ID FROM brand WHERE name='MSI'), 'GeForce', 'RTX 4090 Suprim X 24G', 2610, 'HDMI, DP'),
-((SELECT ID FROM brand WHERE name='Zotac'), 'Gaming', 'GeForce RTX 4070 Ti Trinity', 2700, 'HDMI, DP'),
-((SELECT ID FROM brand WHERE name='Intel'), 'Arc', 'A770 Limited Edition', 2100, 'HDMI, DP'),
-((SELECT ID FROM brand WHERE name='Palit'), 'GeForce', 'RTX 4090 GameRock OC', 2610, 'HDMI, DP'),
-((SELECT ID FROM brand WHERE name='Gainward'), 'GeForce', 'RTX 4070 Ti SUPER Panther OC', 2700, 'HDMI, DP'),
-((SELECT ID FROM brand WHERE name='MSI'), 'GeForce', 'RTX 4070 Ti Gaming X Trio 12G', 2700, 'HDMI, DP'),
-((SELECT ID FROM brand WHERE name='ASRock'), 'Radeon', 'RX 7900 XTX Taichi 24GB OC', 2300, 'HDMI, DP'),
-((SELECT ID FROM brand WHERE name='Gigabyte'), 'Aorus', 'GeForce RTX 4090 Master 24G', 2610, 'HDMI, DP'),
-((SELECT ID FROM brand WHERE name='MSI'), 'GeForce', 'RTX 4090 Gaming X Trio 24G', 2610, 'HD))
 
 -- Assuming AMD has ID 1 and Intel has ID 2
 INSERT INTO cpu (brandID, line, name, core_count, thread_count, clock_speed, form, tdp, thermals) VALUES
