@@ -29,3 +29,5 @@ Matei-Dan Crisan
 Erstellen einer HTML Template für die Website.
 
 SQL Querry erweitert.
+
+SQL Refiniert. Einträge übersichtlicher gemacht.
