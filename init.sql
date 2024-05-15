@@ -181,4 +181,17 @@ INSERT INTO gpu (brandID, line, name, clock_speed, IO) VALUES
 ((SELECT ID FROM brand WHERE name='MSI'), 'GeForce', 'RTX 4070 Ti Gaming X Trio 12G', 2700, 'HDMI, DP'),
 ((SELECT ID FROM brand WHERE name='ASRock'), 'Radeon', 'RX 7900 XTX Taichi 24GB OC', 2300, 'HDMI, DP'),
 ((SELECT ID FROM brand WHERE name='Gigabyte'), 'Aorus', 'GeForce RTX 4090 Master 24G', 2610, 'HDMI, DP'),
-((SELECT ID FROM brand WHERE name='MSI'), 'GeForce', 'RTX 4090 Gaming X Trio 24G', 2610, 'HD
+((SELECT ID FROM brand WHERE name='MSI'), 'GeForce', 'RTX 4090 Gaming X Trio 24G', 2610, 'HD))
+
+-- Assuming AMD has ID 1 and Intel has ID 2
+INSERT INTO cpu (brandID, line, name, core_count, thread_count, clock_speed, form, tdp, thermals) VALUES
+(1, 'Ryzen 5', '7600X', 6, 12, 3800, 'AM4', 105, 'Not Specified'),
+(1, 'Ryzen 7', '7700X', 8, 16, 3800, 'AM4', 105, 'Not Specified'),
+(1, 'Ryzen 7', '7800X3D', 8, 16, 3400, 'AM4', 105, 'Not Specified'),
+(1, 'Ryzen 9', '7900X', 12, 24, 3700, 'AM4', 170, 'Not Specified'),
+(1, 'Ryzen 9', '7950X', 16, 32, 4400, 'AM4', 170, 'Not Specified'),
+(2, 'Core i5', '13600K', 6, 12, 3400, 'LGA 1700', 125, 'Not Specified'),
+(2, 'Core i7', '13700K', 8, 16, 3600, 'LGA 1700', 125, 'Not Specified'),
+(2, 'Core i9', '13900K', 8, 16, 3500, 'LGA 1700', 125, 'Not Specified');
+
+
