@@ -25,5 +25,7 @@ das .jar executable von [Releases](https://github.com/osakaruhub/BuildAPC/releas
 
 15.05.24
 Matei-Dan Crisan
+
 Erstellen einer HTML Template für die Website.
+
 SQL Querry erweitert.
