@@ -3,19 +3,19 @@
  */
 package org.sql;
 
+import java.awt.Component;
 import java.sql.*;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.*;
-import java.awt.Component;
 
 public class App {
-  static final JFrame frame = new JFrame("A Simple GUI");
-  static final JPanel panel = new JPanel();
   // static final String[] hardwareTypes = {
   // "mainboard", "cpu", "gpu", "ram", "psu",
   // "storage", "ccase", "fan", "cpu_cooler", "rad" };
   static final String[] hardwareTypes = { "cpu" };
+  static final JFrame frame = new JFrame("Simple GUI");
+  static final JPanel panel = new JPanel();
   static final Map<String, JComboBox<String>> comboboxes = new HashMap<>(hardwareTypes.length);
   PreparedStatement ps;
   Connection con;
@@ -24,12 +24,10 @@ public class App {
   String password = "password";
 
   public App() {
-
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     frame.setSize(980, 720);
 
     panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-
     try {
       connect();
       for (String hardwareType : hardwareTypes) {
