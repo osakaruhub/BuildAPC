@@ -16,6 +16,7 @@ public class App {
   static final String[] hardwareTypes = { "cpu" };
   static final JFrame frame = new JFrame("Simple GUI");
   static final JPanel panel = new JPanel();
+  static final Map<String, Integer> config = new Map<>();
   static final Map<String, JComboBox<String>> comboboxes = new HashMap<>(hardwareTypes.length);
   PreparedStatement ps;
   Connection con;
@@ -59,6 +60,7 @@ public class App {
     }
     frame.add(panel);
     frame.setVisible(true);
+    initConfig();
   }
 
   // public String getPassword() {
@@ -68,6 +70,12 @@ public class App {
   // return null;
   // }
   // }
+
+  public void InitMap() {
+    for (String hardWare : hardwareTypes) {
+      config.put(hardWare, null);
+    }
+  }
 
   public Boolean connect() {
     try {
@@ -79,8 +87,40 @@ public class App {
     }
   }
 
-  public static String compatible() {
-    return "test";
+  public int getWattage() {
+    int wattage;
+    for (hardwareTypes var : iterable) {
+      ps = con.prepareStatement("SELECT SUM(wattage) FROM cpu");
+      return (ps.executeQuery()).getObject(attribute);
+    }
+  }
+
+  public Object get(String hardWare, String attribute) {
+    try {
+      ps = con.prepareStatement("SELECT " + hardWare + "." + attribute +
+          " FROM " + hardWare + " WHERE " + hardWare +
+          ".ID =" + config.get(hardWare));
+      return (ps.executeQuery()).getObject(attribute);
+    } catch (SQLException e) {
+      // TODO: handle exception
+      return null;
+    }
+  }
+
+  public String compatible() {
+    // TODO: add Filters
+    // NOTE: Filter
+    // String query = "SELECT cpu.ID FROM cpu WHERE cpu.form IN (SELECT cpu.form
+    // FROM cpu WHERE cpu.name = " + config.get("cpu"); ps =
+    // con.prepareStatement(query); ResultSet rs = ps.executeQuery();
+    return get("cpu", "form") == get("mainboard", "form")
+        ? "CPU Form compatible"
+        : "incompatible cpu Architecture";
+    return toSize(get("ccase", "form")) < toSize(get("mainboard", "form"))
+        ? "CPU Form compatible"
+        : "Mainboard doesn't fit";
+    return getWattage() > get("psu", "wattage") ? "PSU wattage ok"
+        : "PSU wattage to weak";
   }
 
   public static void main(String[] args) {
