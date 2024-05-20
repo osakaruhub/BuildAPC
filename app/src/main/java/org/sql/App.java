@@ -71,7 +71,7 @@ public class App {
   // }
   // }
 
-  public void InitMap() {
+  public void initConfig() {
     for (String hardWare : hardwareTypes) {
       config.put(hardWare, null);
     }
