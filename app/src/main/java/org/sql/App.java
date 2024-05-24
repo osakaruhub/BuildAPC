@@ -4,26 +4,22 @@
 package org.sql;
 
 import java.awt.Component;
-import java.awt.List;
+import java.util.List;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import javax.swing.*;
 
 public class App {
-  static final String[] hardwareTypes = {
-      "mainboard", "cpu", "gpu", "ram", "psu",
-      "storage", "ccase", "fan", "cpu_cooler", "rad" };
+  static final List<String> hardwareTypes = List.of("mainboard", "cpu", "gpu", "ram", "psu", "storage", "ccase", "fan",
+      "cpu_cooler", "rad");
   static final JFrame frame = new JFrame("Simple GUI");
   static final JPanel panel = new JPanel();
-  static final Map<String, Integer> config = new HashMap<>();
-  static final ArrayList<JComboBox<Hardware>> comboboxes = new ArrayList<>(hardwareTypes.length);
+  static Map<String, Integer> config = new HashMap<>();
+  static final ArrayList<JComboBox<Hardware>> comboboxes = new ArrayList<>(hardwareTypes.size());
   static final ArrayList<Hardware> hardwareList = new ArrayList<>();
-  PreparedStatement ps;
-  Connection con;
+  static PreparedStatement ps;
+  static Connection con;
+  static ResultSet rs;
   final String url = "jdbc:mariadb://localhost:3306/PC_Builder";
   String user = "guest";
   String password = "password";
@@ -40,7 +36,7 @@ public class App {
         String query = "SELECT " + hardwareType + ".name, " + hardwareType +
             ".buyPrice, " + hardwareType + ".ID FROM " + hardwareType;
         ps = con.prepareStatement(query);
-        ResultSet rs = ps.executeQuery();
+        rs = ps.executeQuery();
 
         String[] choices = new String[rs.getFetchSize()];
         for (String choice : choices) {
@@ -56,7 +52,7 @@ public class App {
 
         cb.setMaximumSize(cb.getPreferredSize());
         cb.setAlignmentX(Component.CENTER_ALIGNMENT);
-        cb.addActionListener(new AddHardWare(hardwareType));
+        cb.addItemListener(new AddHardWare(hardwareType));
         panel.add(cb);
 
         comboboxes.add(cb);
@@ -69,57 +65,87 @@ public class App {
     initConfig();
   }
 
-  public void filterOut(String type, int ID) {
+  static public void filterOut(String type, int ID, Boolean out) {
+    ArrayList<String> query = new ArrayList<>();
     switch (type) {
       case "cpu":
 
-        String query = "SELECT m.ID FROM mainboard m WHERE m.cpuForm <> (SELECT cpu.form FROM cpu WHERE cpu.ID = " + ID;
+        query.add("SELECT m.ID FROM mainboard m WHERE m.cpuForm <> (SELECT cpu.form FROM cpu WHERE cpu.ID = " + ID);
         break;
 
       case "gpu":
 
-        String query = "SELECT m.ID FROM mainboard m WHERE m.cpuForm <> (SELECT cpu.form FROM cpu WHERE cpu.ID = " + ID;
+        query.add("SELECT m.ID FROM mainboard m WHERE m.cpuForm <> (SELECT cpu.form FROM cpu WHERE cpu.ID = " + ID);
         break;
       case "ram":
 
-        String query = "SELECT m.ID FROM mainboard m WHERE m.ddrType <> (SELECT ram.ddrType FROM cpu WHERE cpu.ID = "
-            + ID;
-        String query = "SELECT cpu.ID FROM cpu WHERE cpu.ddrType < (SELECT ram.ddrType FROM cpu WHERE cpu.ID = " + ID;
+        query.add("SELECT m.ID FROM mainboard m WHERE m.ddrType <> (SELECT ram.ddrType FROM cpu WHERE cpu.ID = "
+            + ID);
+        query.add("SELECT cpu.ID FROM cpu WHERE cpu.ddrType < (SELECT ram.ddrType FROM cpu WHERE cpu.ID = " + ID);
         break;
       case "mainboard":
 
-        String query = "SELECT cpu.ID FROM cpu WHERE cpu.form <> (SELECT m.form FROM mainboard m WHERE m.ID = " + ID;
-        String query = "SELECT ram.ID FROM ram WHERE ram.form <> (SELECT m.ddrType FROM mainboard m WHERE m.ID = " + ID;
-        String query = "SELECT ram.ID FROM ram WHERE ram.form <> (SELECT m.ddrType FROM mainboard m WHERE m.ID = " + ID;
+        query.add("SELECT cpu.ID FROM cpu WHERE cpu.form <> (SELECT m.form FROM mainboard m WHERE m.ID = " + ID);
+        query.add("SELECT ram.ID FROM ram WHERE ram.form <> (SELECT m.ddrType FROM mainboard m WHERE m.ID = " + ID);
+        query.add("SELECT ram.ID FROM ram WHERE ram.form <> (SELECT m.ddrType FROM mainboard m WHERE m.ID = " + ID);
 
         break;
       case "ssd":
 
-        String query = "SELECT m.ID FROM mainboard m WHERE m.IO NOT LIKE CONCAT('%', (SELECT ssd.type FROM ssd WHERE ssd.ID = "
-            + ID + "), '%')";
+        query.add(
+            "SELECT m.ID FROM mainboard m WHERE m.IO NOT LIKE CONCAT('%', (SELECT ssd.type FROM ssd WHERE ssd.ID = "
+                + ID + "), '%')");
         break;
       default:
         break;
     }
-    ps = con.prepareStatement(query);
-    ResultSet rs = ps.executeQuery();
-
-    for (int i = 0; i < rs.getFetchSize(); i++) {
-      hardwaretype.removeItemAt(rs.getInt(ID) - 1);
-      rs.next();
+    JComboBox<Hardware> temp = comboboxes.get(hardwareTypes.indexOf(type));
+    try {
+    if (out) {
+      for (String str : query) {
+        rs = con.prepareStatement(str).executeQuery();
+        for (int i = 0; i < rs.getFetchSize(); i++) {
+          temp.remove(hardwareList.get());
+          rs.next();
+        }
+      }
+      comboboxes.set(hardwareTypes.indexOf(type), temp);
+    } else {
+    HashSet<Hardware> tempHash = new HashSet<>();
+        for (int i = 0; i < temp.getItemCount(); i++) {
+          tempHash.add(temp.getItemAt(i));
+        }
+      for (String str : query) {
+        rs = con.prepareStatement(str).executeQuery();
+            while (rs.next()) {
+    int tempID = rs.getInt("ID");
+            try {
+    if (!tempHash.contains()) {
+        comboBox.addItem(hardwareItem);
+        uniqueItems.add(hardwareItem);
+    }
+}
+          temp.removeItemAt(rs.getInt(ID) - 1);
+          rs.next();
+        }
+      }
+    } catch (Exception e) {
+      // TODO: handle exception
     }
   }
 
-  public void filterIn(String type) {
+  static public void filterIn(String type) {
     // TODO: populate filterIn method
+
   }
 
-  public void changeValues(String type, int ID) {
-    // TODO: populate changeValues method
-  }
-
-  public void changeValues(String type) {
-    // TODO: populate changeValues method
+  public static boolean comboBoxContainsItem(JComboBox<Hardware> comboBox, Object item) {
+    for (int i = 0; i < comboBox.getItemCount(); i++) {
+      if (item.equals(comboBox.getItemAt(i))) {
+        return true;
+      }
+    }
+    return false;
   }
 
   // public String getPassword() {
@@ -134,6 +160,8 @@ public class App {
     for (String hardWare : hardwareTypes) {
       config.put(hardWare, null);
     }
+    config.put("wattage", 0);
+    config.put("price", 0);
   }
 
   public Boolean connect() {
@@ -146,32 +174,27 @@ public class App {
     }
   }
 
-  public int getWattage() {
+  static public void add(String type, int ID) {
     try {
-      ps = con.prepareStatement("SELECT SUM(wattage) as wattage FROM " +
-          config.get("wattage") + "");
-      return (ps.executeQuery()).getInt("wattage");
+      ps = con.prepareStatement(
+          "SELECT " + type + ".wattage, " + type + ".price FROM " + type + " WHERE " + type + ".ID = "
+              + config.get("type"));
+      config.replace("wattage", config.get("wattage") + (ps.executeQuery()).getInt("wattage"));
+      config.replace("price", config.get("price") - (ps.executeQuery()).getInt("price"));
     } catch (SQLException e) {
       // TODO: handle exception
-      return -1;
     }
   }
 
-  public int getPrice() {
-    int  = config.values()
-                    .stream()
-                    .filter(value -> value != null)
-                    .collect(Collectors.toList()) try {
-      ps = con.prepareStatement("SELECT SUM(wattage) as wattage FROM " +
-                                config.values()
-                                    .stream()
-                                    .filter(value -> value != null)
-                                    .collect(Collectors.toList()) +
-                                "");
-      return (ps.executeQuery()).getInt("wattage");
+  static public void remove(String type) {
+    try {
+      ps = con.prepareStatement(
+          "SELECT " + type + ".wattage, " + type + ".price FROM " + type + " WHERE " + type + ".ID = "
+              + config.get("type"));
+      config.replace("wattage", config.get("wattage") - (ps.executeQuery()).getInt("wattage"));
+      config.replace("price", config.get("price") - (ps.executeQuery()).getInt("price"));
     } catch (SQLException e) {
       // TODO: handle exception
-      return -1;
     }
   }
 
@@ -185,22 +208,6 @@ public class App {
       // TODO: handle exception
       return null;
     }
-  }
-
-  public String compatible() {
-    // TODO: add Filters
-    // NOTE: Filter
-    // String query = "SELECT cpu.ID FROM cpu WHERE cpu.form IN (SELECT cpu.form
-    // FROM cpu WHERE cpu.name = " + config.get("cpu"); ps =
-    // con.prepareStatement(query); ResultSet rs = ps.executeQuery();
-    return get("cpu", "form") == get("mainboard", "form")
-        ? "CPU Form compatible"
-        : "incompatible cpu Architecture";
-    return toSize(get("ccase", "form")) < toSize(get("mainboard", "form"))
-        ? "CPU Form compatible"
-        : "Mainboard doesn't fit";
-    return getWattage() > get("psu", "wattage") ? "PSU wattage ok"
-        : "PSU wattage to weak";
   }
 
   public static void main(String[] args) {

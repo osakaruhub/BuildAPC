@@ -16,17 +16,16 @@ class AddHardWare implements ItemListener {
   @Override
   public void itemStateChanged(ItemEvent event) {
     if (event.getStateChange() == ItemEvent.SELECTED) {
-      String item = (String) event.getItem();
-      Hardware selectedHardware = (Hardware) hardwareComboBox.getSelectedItem();
-      if (selectedHardware != null) {
-        int selectedHardwareId = selectedHardware.getId();
+      Hardware item = (Hardware) event.getItem();
+      if (item != null) {
+        int selectedHardwareId = item.getId();
+        App.add(type, selectedHardwareId);
+        App.filterOut(type, selectedHardwareId);
         App.config.put(type, selectedHardwareId);
-        App.filterOut(selectedHardwareId);
-        App.changeValues(selectedHardwareId);
       } else {
-        App.config.put(type, null);
+        App.remove(type);
         App.filterIn(type);
-        App.changeValues(type);
+        App.config.put(type, null);
       }
     }
   }
