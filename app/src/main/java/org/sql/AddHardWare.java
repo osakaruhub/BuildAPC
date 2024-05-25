@@ -20,11 +20,11 @@ class AddHardWare implements ItemListener {
       if (item != null) {
         int selectedHardwareId = item.getId();
         App.add(type, selectedHardwareId);
-        App.filterOut(type, selectedHardwareId);
+        App.filter(type, selectedHardwareId, true);
         App.config.put(type, selectedHardwareId);
       } else {
         App.remove(type);
-        App.filterIn(type);
+        App.filter(type, App.config.get(type), false);
         App.config.put(type, null);
       }
     }

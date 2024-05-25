@@ -16,7 +16,7 @@ public class App {
   static final JPanel panel = new JPanel();
   static Map<String, Integer> config = new HashMap<>();
   static final ArrayList<JComboBox<Hardware>> comboboxes = new ArrayList<>(hardwareTypes.size());
-  static final ArrayList<Hardware> hardwareList = new ArrayList<>();
+  static final Map<Integer, Hardware> hardwareList = new HashMap<>();
   static PreparedStatement ps;
   static Connection con;
   static ResultSet rs;
@@ -40,7 +40,7 @@ public class App {
 
         String[] choices = new String[rs.getFetchSize()];
         for (String choice : choices) {
-          hardwareList.add(new Hardware(rs.getInt("ID"), rs.getString("name")));
+          hardwareList.put(rs.getInt("ID"), new Hardware(rs.getInt("ID"), rs.getString("name"), hardwareType));
           choice = rs.getString("name") + "\t" + rs.getLong("buyPrice");
           System.out.println(choice);
           rs.next();
@@ -65,7 +65,7 @@ public class App {
     initConfig();
   }
 
-  static public void filterOut(String type, int ID, Boolean out) {
+  static public void filter(String type, int ID, Boolean out) {
     ArrayList<String> query = new ArrayList<>();
     switch (type) {
       case "cpu":
@@ -73,10 +73,6 @@ public class App {
         query.add("SELECT m.ID FROM mainboard m WHERE m.cpuForm <> (SELECT cpu.form FROM cpu WHERE cpu.ID = " + ID);
         break;
 
-      case "gpu":
-
-        query.add("SELECT m.ID FROM mainboard m WHERE m.cpuForm <> (SELECT cpu.form FROM cpu WHERE cpu.ID = " + ID);
-        break;
       case "ram":
 
         query.add("SELECT m.ID FROM mainboard m WHERE m.ddrType <> (SELECT ram.ddrType FROM cpu WHERE cpu.ID = "
@@ -87,7 +83,7 @@ public class App {
 
         query.add("SELECT cpu.ID FROM cpu WHERE cpu.form <> (SELECT m.form FROM mainboard m WHERE m.ID = " + ID);
         query.add("SELECT ram.ID FROM ram WHERE ram.form <> (SELECT m.ddrType FROM mainboard m WHERE m.ID = " + ID);
-        query.add("SELECT ram.ID FROM ram WHERE ram.form <> (SELECT m.ddrType FROM mainboard m WHERE m.ID = " + ID);
+        query.add("SELECT case.ID FROM case WHERE case.size < (SELECT m.size FROM mainboard m WHERE m.ID = " + ID);
 
         break;
       case "ssd":
@@ -96,37 +92,34 @@ public class App {
             "SELECT m.ID FROM mainboard m WHERE m.IO NOT LIKE CONCAT('%', (SELECT ssd.type FROM ssd WHERE ssd.ID = "
                 + ID + "), '%')");
         break;
+      case "case":
+        query.add("SELECT m.ID FROM mainboard m WHERE m.size < (SELECT case.size FROM case WHERE case.ID = " + ID);
+        break;
       default:
         break;
     }
     JComboBox<Hardware> temp = comboboxes.get(hardwareTypes.indexOf(type));
     try {
-    if (out) {
-      for (String str : query) {
-        rs = con.prepareStatement(str).executeQuery();
-        for (int i = 0; i < rs.getFetchSize(); i++) {
-          temp.remove(hardwareList.get());
-          rs.next();
+      if (out) {
+        for (String str : query) {
+          rs = con.prepareStatement(str).executeQuery();
+          for (int i = 0; i < rs.getFetchSize(); i++) {
+            temp.removeItem(hardwareList.get(rs.getInt("ID")));
+            rs.next();
+          }
         }
-      }
-      comboboxes.set(hardwareTypes.indexOf(type), temp);
-    } else {
-    HashSet<Hardware> tempHash = new HashSet<>();
+        comboboxes.set(hardwareTypes.indexOf(type), temp);
+      } else {
+        HashSet<Hardware> tempHash = new HashSet<>();
         for (int i = 0; i < temp.getItemCount(); i++) {
           tempHash.add(temp.getItemAt(i));
         }
-      for (String str : query) {
-        rs = con.prepareStatement(str).executeQuery();
-            while (rs.next()) {
-    int tempID = rs.getInt("ID");
-            try {
-    if (!tempHash.contains()) {
-        comboBox.addItem(hardwareItem);
-        uniqueItems.add(hardwareItem);
-    }
-}
-          temp.removeItemAt(rs.getInt(ID) - 1);
-          rs.next();
+        for (String str : query) {
+          rs = con.prepareStatement(str).executeQuery();
+          for (int i = 0; i < rs.getFetchSize(); i++) {
+            tempHash.add(hardwareList.get(rs.getInt("ID")));
+            rs.next();
+          }
         }
       }
     } catch (Exception e) {
@@ -134,18 +127,13 @@ public class App {
     }
   }
 
-  static public void filterIn(String type) {
-    // TODO: populate filterIn method
-
-  }
-
-  public static boolean comboBoxContainsItem(JComboBox<Hardware> comboBox, Object item) {
-    for (int i = 0; i < comboBox.getItemCount(); i++) {
-      if (item.equals(comboBox.getItemAt(i))) {
-        return true;
-      }
+  public void name() {
+    if (config.get("wattage") > config.get("psu")) {
+      JOptionPane.showMessageDialog(null, "PSU Overload",
+          "Your Config's power consumption is higher than your PSU can handle.\nconsider downgrading or using a better PSU",
+          JOptionPane.INFORMATION_MESSAGE);
+      gui.disableCheckOut();
     }
-    return false;
   }
 
   // public String getPassword() {
@@ -198,17 +186,17 @@ public class App {
     }
   }
 
-  public Object get(String hardWare, String attribute) {
-    try {
-      ps = con.prepareStatement("SELECT " + hardWare + "." + attribute +
-          " FROM " + hardWare + " WHERE " + hardWare +
-          ".ID =" + config.get(hardWare));
-      return (ps.executeQuery()).getObject(attribute);
-    } catch (SQLException e) {
-      // TODO: handle exception
-      return null;
-    }
-  }
+  // public Object get(String hardWare, String attribute) {
+  // try {
+  // ps = con.prepareStatement("SELECT " + hardWare + "." + attribute +
+  // " FROM " + hardWare + " WHERE " + hardWare +
+  // ".ID =" + config.get(hardWare));
+  // return (ps.executeQuery()).getObject(attribute);
+  // } catch (SQLException e) {
+  // // TODO: handle exception
+  // return null;
+  // }
+  // }
 
   public static void main(String[] args) {
     App A = new App();
