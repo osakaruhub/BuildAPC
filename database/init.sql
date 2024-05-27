@@ -43,19 +43,21 @@ CREATE TABLE IF NOT EXISTS user (
   PRIMARY KEY (userID)
 );
 
-CREATE TABLE IF NOT EXISTS user_owned_components (
+CREATE TABLE IF NOT EXISTS user_owned_config (
   userID INT NOT NULL,
-  component_type VARCHAR(50) NOT NULL,
-  componentID INT NOT NULL,
-  PRIMARY KEY (userID, component_type, componentID),
-  FOREIGN KEY (userID) REFERENCES user(userID)
-);
-
-CREATE TABLE IF NOT EXISTS user_wishlist_components (
-  userID INT NOT NULL,
-  component_type VARCHAR(50) NOT NULL,
-  componentID INT NOT NULL,
-  PRIMARY KEY (userID, component_type, componentID),
+  configID NOT NULL AUTO_INCREMENT,
+  mainboard INT NOT NULL,
+  ram INT,
+  cpu INT,
+  gpu INT,
+  psu INT,
+  ccase INT,
+  hdd INT,
+  ssd INT,
+  fan INT,
+  radiator INT,
+  cpu_cooler INT,
+  PRIMARY KEY (userID, configID),
   FOREIGN KEY (userID) REFERENCES user(userID)
 );
 
