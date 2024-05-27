@@ -36,12 +36,28 @@ INSERT INTO brand (
   ('Cooler_master');
 
 -- NOTE: User functionality
--- CREATE TABLE IF NOT EXISTS user (
---   userID INT NOT NULL AUTO_INCREMENT,
---   name VARCHAR(30) NOT NULL,
---   password VARCHAR(25) NOT NULL,
---   PRIMARY KEY (userID)
--- );
+CREATE TABLE IF NOT EXISTS user (
+  userID INT NOT NULL AUTO_INCREMENT,
+  name VARCHAR(30) NOT NULL,
+  password VARCHAR(25) NOT NULL,
+  PRIMARY KEY (userID)
+);
+
+CREATE TABLE IF NOT EXISTS user_owned_components (
+  userID INT NOT NULL,
+  component_type VARCHAR(50) NOT NULL,
+  componentID INT NOT NULL,
+  PRIMARY KEY (userID, component_type, componentID),
+  FOREIGN KEY (userID) REFERENCES user(userID)
+);
+
+CREATE TABLE IF NOT EXISTS user_wishlist_components (
+  userID INT NOT NULL,
+  component_type VARCHAR(50) NOT NULL,
+  componentID INT NOT NULL,
+  PRIMARY KEY (userID, component_type, componentID),
+  FOREIGN KEY (userID) REFERENCES user(userID)
+);
 
 CREATE TABLE IF NOT EXISTS mainboard (
   ID INT NOT NULL AUTO_INCREMENT,
