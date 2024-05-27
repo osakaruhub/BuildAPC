@@ -4,7 +4,6 @@
 package org.sql;
 
 import java.awt.Component;
-import java.util.List;
 import java.sql.*;
 import java.util.*;
 import javax.swing.*;
@@ -17,6 +16,8 @@ public class App {
   static Map<String, Integer> config = new HashMap<>();
   static final ArrayList<JComboBox<Hardware>> comboboxes = new ArrayList<>(hardwareTypes.size());
   static final Map<Integer, Hardware> hardwareList = new HashMap<>();
+  JCheckBox[] filterButtons = new JCheckBox[5];
+  JSlider[] filterSliders = new JSlider[3];
   static PreparedStatement ps;
   static Connection con;
   static ResultSet rs;
@@ -35,8 +36,7 @@ public class App {
 
         String query = "SELECT " + hardwareType + ".name, " + hardwareType +
             ".buyPrice, " + hardwareType + ".ID FROM " + hardwareType;
-        ps = con.prepareStatement(query);
-        rs = ps.executeQuery();
+        rs = con.prepareStatement(query).executeQuery();
 
         String[] choices = new String[rs.getFetchSize()];
         for (String choice : choices) {
@@ -52,7 +52,7 @@ public class App {
 
         cb.setMaximumSize(cb.getPreferredSize());
         cb.setAlignmentX(Component.CENTER_ALIGNMENT);
-        cb.addItemListener(new AddHardWare(hardwareType));
+        cb.addItemListener(new ChangeHardWare(hardwareType));
         panel.add(cb);
 
         comboboxes.add(cb);
@@ -60,48 +60,75 @@ public class App {
     } catch (SQLException e) {
       System.err.println(e.getMessage());
     }
+    mkfilters();
     frame.add(panel);
     frame.setVisible(true);
     initConfig();
   }
 
-  static public void filter(String type, int ID, Boolean out) {
-    ArrayList<String> query = new ArrayList<>();
+  public void mkfilters() {
+    // TODO: Add more filters buttons/sliders
+    filterButtons[0] = new JCheckBox("AMD");
+    filterButtons[0].addItemListener(new Filter("cpu", "brand", "AMD"));
+
+    filterSliders[0] = new JSlider(JSlider.VERTICAL, 0,
+        ps.executeQuery("SELECT MAX(price) as maxPrice FROM *").getInt("maxPrice"));
+    filterSliders[0].addChangeListener();
+
+    for (JCheckBox filterButton : filterButtons) {
+      panel.add(filterButton);
+    }
+  }
+
+  static public void filterByValue(String type, String characteristic, Object value, Boolean out) {
+    String[] query = {
+        "SELECT " + type + ".ID FROM " + type + " WHERE " + type + "." + characteristic + " = " + value };
+    addFilter(query, type, out);
+  }
+
+  static public void filterByItem(String type, int ID, Boolean out) {
+    // TODO: Expand Itemfilters
+    ArrayList<String> queries = new ArrayList<>();
     switch (type) {
       case "cpu":
 
-        query.add("SELECT m.ID FROM mainboard m WHERE m.cpuForm <> (SELECT cpu.form FROM cpu WHERE cpu.ID = " + ID);
+        queries.add("SELECT m.ID FROM mainboard m WHERE m.cpuForm <> (SELECT cpu.form FROM cpu WHERE cpu.ID = " + ID);
         break;
 
       case "ram":
 
-        query.add("SELECT m.ID FROM mainboard m WHERE m.ddrType <> (SELECT ram.ddrType FROM cpu WHERE cpu.ID = "
+        queries.add("SELECT m.ID FROM mainboard m WHERE m.ddrType <> (SELECT ram.ddrType FROM cpu WHERE cpu.ID = "
             + ID);
-        query.add("SELECT cpu.ID FROM cpu WHERE cpu.ddrType < (SELECT ram.ddrType FROM cpu WHERE cpu.ID = " + ID);
+        queries.add("SELECT cpu.ID FROM cpu WHERE cpu.ddrType < (SELECT ram.ddrType FROM cpu WHERE cpu.ID = " + ID);
         break;
       case "mainboard":
 
-        query.add("SELECT cpu.ID FROM cpu WHERE cpu.form <> (SELECT m.form FROM mainboard m WHERE m.ID = " + ID);
-        query.add("SELECT ram.ID FROM ram WHERE ram.form <> (SELECT m.ddrType FROM mainboard m WHERE m.ID = " + ID);
-        query.add("SELECT case.ID FROM case WHERE case.size < (SELECT m.size FROM mainboard m WHERE m.ID = " + ID);
+        queries.add("SELECT cpu.ID FROM cpu WHERE cpu.form <> (SELECT m.form FROM mainboard m WHERE m.ID = " + ID);
+        queries.add("SELECT ram.ID FROM ram WHERE ram.form <> (SELECT m.ddrType FROM mainboard m WHERE m.ID = " + ID);
+        queries.add("SELECT case.ID FROM case WHERE case.size < (SELECT m.size FROM mainboard m WHERE m.ID = " + ID);
 
         break;
       case "ssd":
 
-        query.add(
+        queries.add(
             "SELECT m.ID FROM mainboard m WHERE m.IO NOT LIKE CONCAT('%', (SELECT ssd.type FROM ssd WHERE ssd.ID = "
                 + ID + "), '%')");
         break;
       case "case":
-        query.add("SELECT m.ID FROM mainboard m WHERE m.size < (SELECT case.size FROM case WHERE case.ID = " + ID);
+        queries.add("SELECT m.ID FROM mainboard m WHERE m.size < (SELECT case.size FROM case WHERE case.ID = " + ID);
         break;
       default:
         break;
     }
+
+    addFilter((String[]) queries.toArray(), type, out);
+  }
+
+  static public void addFilter(String[] queries, String type, Boolean out) {
     JComboBox<Hardware> temp = comboboxes.get(hardwareTypes.indexOf(type));
     try {
       if (out) {
-        for (String str : query) {
+        for (String str : queries) {
           rs = con.prepareStatement(str).executeQuery();
           for (int i = 0; i < rs.getFetchSize(); i++) {
             temp.removeItem(hardwareList.get(rs.getInt("ID")));
@@ -114,7 +141,7 @@ public class App {
         for (int i = 0; i < temp.getItemCount(); i++) {
           tempHash.add(temp.getItemAt(i));
         }
-        for (String str : query) {
+        for (String str : queries) {
           rs = con.prepareStatement(str).executeQuery();
           for (int i = 0; i < rs.getFetchSize(); i++) {
             tempHash.add(hardwareList.get(rs.getInt("ID")));
@@ -127,12 +154,12 @@ public class App {
     }
   }
 
-  public void name() {
+  static public void checkWattage() {
     if (config.get("wattage") > config.get("psu")) {
       JOptionPane.showMessageDialog(null, "PSU Overload",
           "Your Config's power consumption is higher than your PSU can handle.\nconsider downgrading or using a better PSU",
           JOptionPane.INFORMATION_MESSAGE);
-      gui.disableCheckOut();
+      // gui.disableCheckOut();
     }
   }
 

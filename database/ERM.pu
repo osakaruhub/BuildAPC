@@ -10,6 +10,7 @@ entity "mainboard" {
   brandID : INT <<FK>>
   chipset INT
   form VARCHAR(20) <<FK>>
+  ddrType INT
   ethernet_speed INT
   IO VARCHAR(255)
   other_features VARHAR(255)
@@ -23,6 +24,7 @@ entity "cpu" {
   name : VARCHAR(50)
   core_count : INT
   thread_count : INT
+  ddrType INT
   clock_speed : INT 
   form : VARCHAR(10)
   tdp : INT
@@ -45,7 +47,7 @@ entity "ram" {
   name : VARCHAR(50)
   clock_speed : INT 
   timing : INT
-  type : VARCHAR(50)
+  ddrType : VARCHAR(50)
   price : INT
 }
 

@@ -6,10 +6,10 @@ import java.awt.event.ItemListener;
 /**
  * AddHardWare
  */
-class AddHardWare implements ItemListener {
+class ChangeHardWare implements ItemListener {
   String type;
 
-  public AddHardWare(String type) {
+  public ChangeHardWare(String type) {
     this.type = type;
   }
 
@@ -20,13 +20,14 @@ class AddHardWare implements ItemListener {
       if (item != null) {
         int selectedHardwareId = item.getId();
         App.add(type, selectedHardwareId);
-        App.filter(type, selectedHardwareId, true);
+        App.filterByItem(type, selectedHardwareId, true);
         App.config.put(type, selectedHardwareId);
       } else {
         App.remove(type);
-        App.filter(type, App.config.get(type), false);
+        App.filterByItem(type, App.config.get(type), false);
         App.config.put(type, null);
       }
+      App.checkWattage();
     }
   }
 }
