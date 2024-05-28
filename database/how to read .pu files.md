@@ -2,6 +2,10 @@
 
 .pu files are plaintext files that model a diagram using PlantUML.
 
+read [this Documentation](https://plantuml.com/starting) to learn about PlantUML.
+
+### How do i create diagrams from pu files?
+
 Download the [jar file](https://github.com/plantuml/plantuml/releases) and execute it.
 
 #### Windows
