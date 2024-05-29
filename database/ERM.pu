@@ -1,5 +1,28 @@
 @startuml
 
+
+entity "user" {
+  userID <<PK>>
+  name VARCHAR(30)
+  password VARCHAR(25)
+}
+
+entity "config" {
+  userID : INT <<PK>> <<FK>>
+  configID : INT <<PK>
+  mainboard : INT
+  ram : INT
+  cpu : INT
+  gpu : INT
+  psu : INT
+  ccase : INT
+  hdd : INT 
+  ssd : INT
+  fan : INT
+  radiator : INT
+  cpu_cooler : INT
+}
+
 entity "brand" {
   ID : INT <<PK>>
   name : VARCHAR(20)
@@ -10,6 +33,7 @@ entity "mainboard" {
   brandID : INT <<FK>>
   chipset INT
   form VARCHAR(20) <<FK>>
+  ddrType INT
   ethernet_speed INT
   IO VARCHAR(255)
   other_features VARHAR(255)
@@ -23,6 +47,7 @@ entity "cpu" {
   name : VARCHAR(50)
   core_count : INT
   thread_count : INT
+  ddrType INT
   clock_speed : INT 
   form : VARCHAR(10)
   tdp : INT
@@ -45,7 +70,7 @@ entity "ram" {
   name : VARCHAR(50)
   clock_speed : INT 
   timing : INT
-  type : VARCHAR(50)
+  ddrType : VARCHAR(50)
   price : INT
 }
 
@@ -114,17 +139,29 @@ entity "radiator" {
   price : INT
 }
 
-mainboard -- brand
-cpu -- brand
-gpu -- brand
-ram -- brand
-psu -- brand
-hdd -- brand
-ssd -- brand
-case -- brand
-fan -- brand
-cpu_cooler -- brand
-radiator -- brand
-case -- size
-mainboard -- size
+mainboard -- "1" brand
+cpu -- "1" brand
+gpu -- "1" brand
+ram -- "1" brand
+psu -- "1" brand
+hdd -- "1" brand
+ssd -- "1" brand
+case -- "1" brand
+fan -- "1" brand
+cpu_cooler -- "1" brand
+radiator -- "1" brand
+mainboard -- "1" config
+cpu o-- config
+gpu o-- config
+ram o-- config
+psu o-- config
+hdd o-- config
+ssd o-- config
+case o-- config
+fan o-- config
+cpu_cooler o-- config
+radiator o-- config
+case o-- size
+mainboard o-- size
+user "1" *-- "n" config
 @enduml

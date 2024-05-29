@@ -12,6 +12,10 @@ Einfach dieses Repo klonen und das gradle executable starten.
 
 das .jar executable von [Releases](https://github.com/osakaruhub/BuildAPC/releases) herunterladen und starten.
 
+## Develop
+
+create user guest with password 'password' with mariadb, run init.sql and execute the jar file.
+
 ## Meilensteine
 
 - [ ] Kompatibel Hardwareweise
