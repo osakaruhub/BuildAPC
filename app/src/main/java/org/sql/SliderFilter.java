@@ -12,17 +12,19 @@ public class SliderFilter implements ChangeListener {
   int maxValue;
   String type;
   String characteristic;
-  Object value;
+
+  public SliderFilter(int maxValue, String type, String characteristic) {
+    this.maxValue = maxValue;
+    this.type = type;
+    this.characteristic = characteristic;
+  }
 
   @Override
-public void stateChanged(ChangeEvent e) {
-    JSlider source = (JSlider)e.getSource();
+  public void stateChanged(ChangeEvent e) {
+    JSlider source = (JSlider) e.getSource();
     if (!source.getValueIsAdjusting()) {
       int price = (int) source.getValue();
-      if (price == ) {
-        
-      }
-      App.filterByValue(type, characteristic, value, true);
+      App.filterByValue(type, characteristic, price, true);
     }
   }
 }

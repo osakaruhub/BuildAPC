@@ -4,20 +4,24 @@
 package org.sql;
 
 import java.awt.Component;
+import java.awt.Dimension;
 import java.sql.*;
 import java.util.*;
 import javax.swing.*;
 
 public class App {
-  static final List<String> hardwareTypes = List.of("mainboard", "cpu", "gpu", "ram", "psu", "storage", "ccase", "fan",
-      "cpu_cooler", "rad");
+  static final List<String> hardwareTypes = List.of("mainboard", "cpu", "gpu", "ram", "psu", "ssd", "hdd", "ccase",
+      "fan",
+      "cpu_cooler", "radiator");
   static final JFrame frame = new JFrame("Simple GUI");
   static final JPanel panel = new JPanel();
+  static final JPanel legend = new JPanel();
   static Map<String, Integer> config = new HashMap<>();
   static final ArrayList<JComboBox<Hardware>> comboboxes = new ArrayList<>(hardwareTypes.size());
   static final Map<Integer, Hardware> hardwareList = new HashMap<>();
   JCheckBox[] filterButtons = new JCheckBox[5];
-  JSlider[] filterSliders = new JSlider[3];
+  // Map<String, JSlider[]> filterSliders;
+  JSlider[] PriceFilterSlider;
   static PreparedStatement ps;
   static Connection con;
   static ResultSet rs;
@@ -30,12 +34,13 @@ public class App {
     frame.setSize(980, 720);
 
     panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+    legend.setPreferredSize(new Dimension(200, frame.getHeight()));
     try {
       connect();
       for (String hardwareType : hardwareTypes) {
 
         String query = "SELECT " + hardwareType + ".name, " + hardwareType +
-            ".buyPrice, " + hardwareType + ".ID FROM " + hardwareType;
+            ".price, " + hardwareType + ".ID FROM " + hardwareType;
         rs = con.prepareStatement(query).executeQuery();
 
         String[] choices = new String[rs.getFetchSize()];
@@ -71,13 +76,24 @@ public class App {
     filterButtons[0] = new JCheckBox("AMD");
     filterButtons[0].addItemListener(new Filter("cpu", "brand", "AMD"));
 
-    filterSliders[0] = new JSlider(JSlider.VERTICAL, 0,
-        ps.executeQuery("SELECT MAX(price) as maxPrice FROM *").getInt("maxPrice"));
-    filterSliders[0].addChangeListener();
+    legend.add(filterButtons[0]);
 
-    for (JCheckBox filterButton : filterButtons) {
-      panel.add(filterButton);
+    PriceFilterSlider = new JSlider[hardwareList.size()];
+
+    try {
+      for (JSlider slider : PriceFilterSlider) {
+        slider = new JSlider(JSlider.VERTICAL, 0,
+            ps.executeQuery("SELECT MAX(cpu.price) as maxPrice FROM cpu").getInt("maxPrice"));
+        slider.addChangeListener(new SliderFilter(slider.getMaximum(), "cpu", "price"));
+      }
+    } catch (SQLException e) {
+      // TODO: handle exception
     }
+
+    for (JSlider jSlider : PriceFilterSlider) {
+      legend.add(jSlider);
+    }
+
   }
 
   static public void filterByValue(String type, String characteristic, Object value, Boolean out) {
