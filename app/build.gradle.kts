@@ -21,6 +21,7 @@ dependencies {
 
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     implementation("org.mariadb.jdbc:mariadb-java-client:3.3.3")
+    implementation("com.jidesoft:jide-oss:3.6.9")
 
     // This dependency is used by the application.
     implementation(libs.guava)

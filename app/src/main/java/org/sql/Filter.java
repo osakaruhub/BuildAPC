@@ -13,7 +13,9 @@ public class Filter implements ItemListener {
   Object value;
 
   public Filter(String type, String filter, Object value) {
+    this.type = type;
     this.filter = filter;
+    this.value = value;
   }
 
   @Override

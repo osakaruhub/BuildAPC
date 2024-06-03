@@ -3,8 +3,9 @@
  */
 package org.sql;
 
-import java.awt.Component;
-import java.awt.Dimension;
+import com.jidesoft.swing.ComboBoxSearchable;
+import java.util.List;
+import java.awt.*;
 import java.sql.*;
 import java.util.*;
 import javax.swing.*;
@@ -16,8 +17,11 @@ public class App {
   static final JFrame frame = new JFrame("Simple GUI");
   static final JPanel panel = new JPanel();
   static final JPanel legend = new JPanel();
+  static final JPanel headerPanel = new JPanel();
+  static final JButton authenticationButton = new JButton("Authenticate"), collapseButton = new JButton();
   static Map<String, Integer> config = new HashMap<>();
   static final ArrayList<JComboBox<Hardware>> comboboxes = new ArrayList<>(hardwareTypes.size());
+  static final ArrayList<ComboBoxSearchable> comboBoxSearchable = new ArrayList<>(hardwareTypes.size());
   static final Map<Integer, Hardware> hardwareList = new HashMap<>();
   JCheckBox[] filterButtons = new JCheckBox[5];
   // Map<String, JSlider[]> filterSliders;
@@ -34,19 +38,36 @@ public class App {
     frame.setSize(980, 720);
 
     panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-    legend.setPreferredSize(new Dimension(200, frame.getHeight()));
+    legend.setPreferredSize(new Dimension(100 , frame.getHeight()));
+        headerPanel.setLayout(new BorderLayout());
+    authenticationButton.addActionListener(new Authentication());
+        
+        headerPanel.add(authenticationButton, BorderLayout.EAST);
+        
+        legend.setLayout(new FlowLayout(FlowLayout.CENTER));
+        
+        collapseButton.addActionListener(new Collapsable());
+
+        headerPanel.add(collapseButton, BorderLayout.WEST);
+        frame.add(headerPanel, BorderLayout.NORTH);
+        
     try {
-      connect();
+      while (!connect()) {
+        System.out.println("Program couldn't connect. trying in 5s..."); 
+        Thread.sleep(5000);
+      }
+      System.out.println("connected successfully");
       for (String hardwareType : hardwareTypes) {
 
-        String query = "SELECT " + hardwareType + ".name, " + hardwareType +
-            ".price, " + hardwareType + ".ID FROM " + hardwareType;
-        rs = con.prepareStatement(query).executeQuery();
+        String query = "SELECT name, price, ID FROM " + hardwareType;
+        System.out.println(query);
+        rs = con.createStatement().executeQuery(query);
 
         String[] choices = new String[rs.getFetchSize()];
         for (String choice : choices) {
           hardwareList.put(rs.getInt("ID"), new Hardware(rs.getInt("ID"), rs.getString("name"), hardwareType));
-          choice = rs.getString("name") + "\t" + rs.getLong("buyPrice");
+          choice = rs.getString("name") + "\t" + rs.getLong("price");
+          // BUG: Not getting correct result sets
           System.out.println(choice);
           rs.next();
         }
@@ -58,15 +79,21 @@ public class App {
         cb.setMaximumSize(cb.getPreferredSize());
         cb.setAlignmentX(Component.CENTER_ALIGNMENT);
         cb.addItemListener(new ChangeHardWare(hardwareType));
+        comboBoxSearchable.add(new ComboBoxSearchable(cb));
         panel.add(cb);
 
         comboboxes.add(cb);
       }
+      System.out.println(hardwareList.toString());
     } catch (SQLException e) {
       System.err.println(e.getMessage());
     }
+    catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
+    }
     mkfilters();
     frame.add(panel);
+    frame.add(legend, BorderLayout.WEST);
     frame.setVisible(true);
     initConfig();
   }
@@ -87,7 +114,6 @@ public class App {
         slider.addChangeListener(new SliderFilter(slider.getMaximum(), "cpu", "price"));
       }
     } catch (SQLException e) {
-      // TODO: handle exception
     }
 
     for (JSlider jSlider : PriceFilterSlider) {
@@ -166,7 +192,6 @@ public class App {
         }
       }
     } catch (Exception e) {
-      // TODO: handle exception
     }
   }
 
@@ -198,7 +223,6 @@ public class App {
   public Boolean connect() {
     try {
       con = DriverManager.getConnection(url, user, password);
-      System.out.println("Connected Successfully!");
       return true;
     } catch (SQLException e) {
       return false;
@@ -213,7 +237,6 @@ public class App {
       config.replace("wattage", config.get("wattage") + (ps.executeQuery()).getInt("wattage"));
       config.replace("price", config.get("price") - (ps.executeQuery()).getInt("price"));
     } catch (SQLException e) {
-      // TODO: handle exception
     }
   }
 
@@ -225,7 +248,14 @@ public class App {
       config.replace("wattage", config.get("wattage") - (ps.executeQuery()).getInt("wattage"));
       config.replace("price", config.get("price") - (ps.executeQuery()).getInt("price"));
     } catch (SQLException e) {
-      // TODO: handle exception
+    }
+  }
+
+  static public int getAccount(String username) {
+    try {
+      return con.prepareStatement("SELECT password FROM user WHERE name = " + username).executeQuery().getString("password").hashCode();
+    } catch (Exception e) {
+      return 0;
     }
   }
 
@@ -236,7 +266,7 @@ public class App {
   // ".ID =" + config.get(hardWare));
   // return (ps.executeQuery()).getObject(attribute);
   // } catch (SQLException e) {
-  // // TODO: handle exception
+  // }
   // return null;
   // }
   // }
