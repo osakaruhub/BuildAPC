@@ -10,15 +10,17 @@ import javax.swing.JOptionPane;
  * Authenticaton
  */
 public class Authentication {
+  static Boolean loggedIn = false;
 
-  public Authentication() {
+  private Authentication() {}
 
+  static public void login() {
     JTextField usernameField = new JTextField();
     JPasswordField passwordField = new JPasswordField();
 
     Object[] message = {
-        "Username:", usernameField,
-        "Password:", passwordField
+            "Username:", usernameField,
+            "Password:", passwordField
     };
 
     int option = JOptionPane.showConfirmDialog(null, message, "Authentication", JOptionPane.OK_CANCEL_OPTION);
@@ -35,7 +37,15 @@ public class Authentication {
     }
   }
 
+  static public void logout() {
+    if( JOptionPane.showConfirmDialog(null, "Are you sure you want to logout?", "Authentication", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION ) {
+      Account.com
+      App.loggedIn = false;
+    }
+  }
+
   private Boolean isValidCredentials(String username, String password) {
     return App.getAccount(username) == password.hashCode();
   }
 }
+
