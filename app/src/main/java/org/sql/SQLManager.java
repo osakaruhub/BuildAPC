@@ -1,3 +1,5 @@
+package org.sql;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -8,10 +10,16 @@ import java.util.HashMap;
 public class SQLManager {
     private Connection con;
     private PreparedStatement ps;
-    private String url = "jdbc:mysql://localhost:3306/yourdatabase"; // Update with your database URL
-    private String user = "yourusername"; // Update with your database username
-    private String password = "yourpassword"; // Update with your database password
+    private String url;
+    private String user;
+    private String password;
     private static HashMap<String, Integer> config = new HashMap<>();
+
+    public SQLManager(String url, String user, String password) {
+        this.url = url;
+        this.user = user;
+        this.password = password;
+    }
 
     public Boolean connect() {
         try {
@@ -21,6 +29,10 @@ public class SQLManager {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public Connection getConnection() {
+        return con;
     }
 
     public void add(String type, int ID) {
