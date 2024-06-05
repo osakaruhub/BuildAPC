@@ -14,18 +14,13 @@ public class App {
   static final List<String> hardwareTypes = List.of("mainboard", "cpu", "gpu", "ram", "psu", "ssd", "hdd", "ccase",
       "fan",
       "cpu_cooler", "radiator");
-  static final JFrame frame = new JFrame("Simple GUI");
-  static final JPanel panel = new JPanel();
-  static final JPanel legend = new JPanel();
-  static final JPanel headerPanel = new JPanel();
-  static final JButton authenticationButton = new JButton("Authenticate"), collapseButton = new JButton();
+  final GUI gui = new GUI();
+  
   static Map<String, Integer> config = new HashMap<>();
   static final ArrayList<JComboBox<Hardware>> comboboxes = new ArrayList<>(hardwareTypes.size());
   static final ArrayList<ComboBoxSearchable> comboBoxSearchable = new ArrayList<>(hardwareTypes.size());
   static final Map<Integer, Hardware> hardwareList = new HashMap<>();
-  JCheckBox[] filterButtons = new JCheckBox[5];
-  // Map<String, JSlider[]> filterSliders;
-  JSlider[] PriceFilterSlider;
+  
   static PreparedStatement ps;
   static Connection con;
   static ResultSet rs;
@@ -34,23 +29,8 @@ public class App {
   String password = "password";
 
   public App() {
-    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    frame.setSize(980, 720);
-
-    panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-    legend.setPreferredSize(new Dimension(100 , frame.getHeight()));
-        headerPanel.setLayout(new BorderLayout());
-    authenticationButton.addActionListener(new Authentication());
-        
-        headerPanel.add(authenticationButton, BorderLayout.EAST);
-        
-        legend.setLayout(new FlowLayout(FlowLayout.CENTER));
-        
-        collapseButton.addActionListener(new Collapsable());
-
-        headerPanel.add(collapseButton, BorderLayout.WEST);
-        frame.add(headerPanel, BorderLayout.NORTH);
-        
+    
+    
     try {
       while (!connect()) {
         System.out.println("Program couldn't connect. trying in 5s..."); 
@@ -80,7 +60,7 @@ public class App {
         cb.setAlignmentX(Component.CENTER_ALIGNMENT);
         cb.addItemListener(new ChangeHardWare(hardwareType));
         comboBoxSearchable.add(new ComboBoxSearchable(cb));
-        panel.add(cb);
+        GUI.panel.add(cb);
 
         comboboxes.add(cb);
       }
@@ -92,18 +72,14 @@ public class App {
       Thread.currentThread().interrupt();
     }
     mkfilters();
-    frame.add(panel);
-    frame.add(legend, BorderLayout.WEST);
-    frame.setVisible(true);
+    
+    
     initConfig();
   }
 
   public void mkfilters() {
     // TODO: Add more filters buttons/sliders
-    filterButtons[0] = new JCheckBox("AMD");
-    filterButtons[0].addItemListener(new Filter("cpu", "brand", "AMD"));
 
-    legend.add(filterButtons[0]);
 
     PriceFilterSlider = new JSlider[hardwareList.size()];
 
