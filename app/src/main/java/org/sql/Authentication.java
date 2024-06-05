@@ -9,11 +9,9 @@ import javax.swing.JOptionPane;
 /**
  * Authenticaton
  */
-public class Authentication implements ActionListener {
+public class Authentication {
 
-  @Override
-  public void actionPerformed(ActionEvent arg0) {
-    // TODO Auto-generated method stub
+  public Authentication() {
 
     JTextField usernameField = new JTextField();
     JPasswordField passwordField = new JPasswordField();
@@ -29,6 +27,7 @@ public class Authentication implements ActionListener {
       String username = usernameField.getText();
       String password = new String(passwordField.getPassword());
       if (username != "" && password != "" && isValidCredentials(username, password)) {
+        App.loggedIn = true;
         JOptionPane.showMessageDialog(null, "Authentication successful!");
       } else {
         JOptionPane.showMessageDialog(null, "Invalid username or password.");
