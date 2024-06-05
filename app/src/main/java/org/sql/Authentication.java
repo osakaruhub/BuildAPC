@@ -29,7 +29,7 @@ public class Authentication {
       String username = usernameField.getText();
       String password = new String(passwordField.getPassword());
       if (username != "" && password != "" && isValidCredentials(username, password)) {
-        App.loggedIn = true;
+        Authentication.loggedIn = true;
         JOptionPane.showMessageDialog(null, "Authentication successful!");
       } else {
         JOptionPane.showMessageDialog(null, "Invalid username or password.");
@@ -39,13 +39,13 @@ public class Authentication {
 
   static public void logout() {
     if( JOptionPane.showConfirmDialog(null, "Are you sure you want to logout?", "Authentication", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION ) {
-      Account.com
-      App.loggedIn = false;
+      GUI.authenticationButton.setVisible(false);
+      Authentication.loggedIn = false;
     }
   }
 
-  private Boolean isValidCredentials(String username, String password) {
-    return App.getAccount(username) == password.hashCode();
+  private static Boolean isValidCredentials(String username, String password) {
+    return SQLManager.getAccount(username) == password.hashCode();
   }
 }
 

@@ -24,7 +24,7 @@ public class SliderFilter implements ChangeListener {
     JSlider source = (JSlider) e.getSource();
     if (!source.getValueIsAdjusting()) {
       int price = (int) source.getValue();
-      App.filterByValue(type, characteristic, price, true);
+      FilterManager.filterByValue(type, characteristic, price, true);
     }
   }
 }

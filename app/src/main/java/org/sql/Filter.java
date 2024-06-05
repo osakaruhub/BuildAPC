@@ -20,6 +20,6 @@ public class Filter implements ItemListener {
 
   @Override
   public void itemStateChanged(ItemEvent e) {
-    App.filterByValue(type, filter, value, e.getStateChange() == ItemEvent.SELECTED);
+    FilterManager.filterByValue(type, filter, value, e.getStateChange() == ItemEvent.SELECTED);
   }
 }

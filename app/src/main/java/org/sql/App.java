@@ -20,14 +20,12 @@ public class App {
     static final ArrayList<ComboBoxSearchable> comboBoxSearchable = new ArrayList<>(hardwareTypes.size());
     static final Map<Integer, Hardware> hardwareList = new HashMap<>();
   
-    static PreparedStatement ps;
-    static Connection con;
-    static ResultSet rs;
     final String url = "jdbc:mariadb://localhost:3306/PC_Builder";
     String user = "guest";
     String password = "password";
 
     private SQLManager sqlManager;
+    private ResultSet rs;
     private FilterManager filterManager;
 
     public App() {
@@ -59,7 +57,7 @@ public class App {
                 cb.setAlignmentX(Component.CENTER_ALIGNMENT);
                 cb.addItemListener(new ChangeHardWare(hardwareType));
                 comboBoxSearchable.add(new ComboBoxSearchable(cb));
-                GUI.panel.add(cb);
+                gui.panel.add(cb);
 
                 comboboxes.add(cb);
             }
@@ -69,12 +67,8 @@ public class App {
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
-        mkfilters();
-        initConfig();
-    }
-
-    public void mkfilters() {
         filterManager.createFilters();
+        initConfig();
     }
 
     public void initConfig() {
@@ -85,7 +79,5 @@ public class App {
         config.put("price", 0);
     }
 
-    public static void main(String[] args) {
-        App A = new App();
-    }
+    public static void main(String[] args) { new App(); }
 }

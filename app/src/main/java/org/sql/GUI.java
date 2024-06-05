@@ -18,10 +18,10 @@ public class GUI extends JFrame {
   JCheckBox[] filterButtons = new JCheckBox[5];
   // Map<String, JSlider[]> filterSliders;
   JSlider[] PriceFilterSlider;
-   final JPanel panel = new JPanel();
-   final JPanel legend = new JPanel();
-   final JPanel headerPanel = new JPanel();
-   final JButton authenticationButton = new JButton("Authenticate"), collapseButton = new JButton();
+   static final JPanel panel = new JPanel();
+   static final JPanel legend = new JPanel();
+   static final JPanel headerPanel = new JPanel();
+   static final JButton authenticationButton = new JButton("Authenticate"), collapseButton = new JButton();
 
   public GUI() {
 
@@ -31,8 +31,7 @@ this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
     legend.setPreferredSize(new Dimension(100 , this.getHeight()));
         headerPanel.setLayout(new BorderLayout());
-    authenticationButton.addActionListener(new Authentication());
-        
+
         headerPanel.add(authenticationButton, BorderLayout.EAST);
         
         legend.setLayout(new FlowLayout(FlowLayout.CENTER));
@@ -54,5 +53,9 @@ this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.pack(); //sets size of the frame automaticly 
         this.setTitle("PC-Builder");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+  }
+
+  public void openConfigWindows() {
+
   }
 }

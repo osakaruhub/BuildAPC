@@ -8,8 +8,8 @@ import java.sql.SQLException;
 import java.util.HashMap;
 
 public class SQLManager {
-    private Connection con;
-    private PreparedStatement ps;
+    private static Connection con;
+    private static PreparedStatement ps;
     private String url;
     private String user;
     private String password;
@@ -31,11 +31,11 @@ public class SQLManager {
         }
     }
 
-    public Connection getConnection() {
+    static public Connection getConnection() {
         return con;
     }
 
-    public void add(String type, int ID) {
+    static public void add(String type, int ID) {
         try {
             ps = con.prepareStatement(
                 "SELECT " + type + ".wattage, " + type + ".price FROM " + type + " WHERE " + type + ".ID = ?");
@@ -52,7 +52,7 @@ public class SQLManager {
         }
     }
 
-    public void remove(String type, int ID) {
+    static public void remove(String type, int ID) {
         try {
             ps = con.prepareStatement(
                 "SELECT " + type + ".wattage, " + type + ".price FROM " + type + " WHERE " + type + ".ID = ?");
@@ -69,7 +69,7 @@ public class SQLManager {
         }
     }
 
-    public int getAccount(String username) {
+    static public int getAccount(String username) {
         try {
             ps = con.prepareStatement("SELECT password FROM user WHERE name = ?");
             ps.setString(1, username);

@@ -33,12 +33,12 @@ public class FilterManager {
         // Add sliders to legend or any other component
     }
 
-    public void filterByValue(String type, String characteristic, Object value, Boolean out) {
+    static public void filterByValue(String type, String characteristic, Object value, Boolean out) {
         String query = "SELECT " + type + ".ID FROM " + type + " WHERE " + type + "." + characteristic + " = " + value;
         addFilter(new String[] { query }, type, out);
     }
 
-    public void filterByItem(String type, int ID, Boolean out) {
+    static public void filterByItem(String type, int ID, Boolean out) {
         ArrayList<String> queries = new ArrayList<>();
         switch (type) {
             case "cpu":

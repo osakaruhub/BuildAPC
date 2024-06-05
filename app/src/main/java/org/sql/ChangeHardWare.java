@@ -19,12 +19,12 @@ class ChangeHardWare implements ItemListener {
       Hardware item = (Hardware) event.getItem();
       if (item != null) {
         int selectedHardwareId = item.getId();
-        App.add(type, selectedHardwareId);
-        App.filterByItem(type, selectedHardwareId, true);
+        SQLManager.add(type, selectedHardwareId);
+        FilterManager.filterByItem(type, selectedHardwareId, true);
         App.config.put(type, selectedHardwareId);
       } else {
-        App.remove(type);
-        App.filterByItem(type, App.config.get(type), false);
+        SQLManager.remove(type);
+        FilterManager.filterByItem(type, App.config.get(type), false);
         App.config.put(type, null);
       }
       App.checkWattage();
