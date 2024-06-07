@@ -5,9 +5,9 @@ import java.util.*;
 import javax.swing.*;
 
 public class FilterManager {
-    private List<String> hardwareTypes;
-    private ArrayList<JComboBox<Hardware>> comboboxes;
-    private Map<Integer, Hardware> hardwareList;
+    private static List<String> hardwareTypes;
+    private static ArrayList<JComboBox<Hardware>> comboboxes;
+    private static Map<Integer, Hardware> hardwareList;
     static Map<String, Integer> config = new HashMap<>();
     static ResultSet rs;
 
@@ -34,12 +34,12 @@ public class FilterManager {
         // Add sliders to legend or any other component
     }
 
-    public void filterByValue(String type, String characteristic, Object value, Boolean out) {
+    public static void filterByValue(String type, String characteristic, Object value, Boolean out) {
         String query = "SELECT " + type + ".ID FROM " + type + " WHERE " + type + "." + characteristic + " = " + value;
-        addFilter(new String[] { query }, type, out);
+        addFilter(new String[]{query}, type, out, comboboxes, hardwareTypes, hardwareList);
     }
 
-    public void filterByItem(String type, int ID, Boolean out) {
+    public static void filterByItem(String type, int ID, Boolean out) {
         ArrayList<String> queries = new ArrayList<>();
         switch (type) {
             case "cpu":
@@ -74,10 +74,11 @@ public class FilterManager {
             default:
                 break;
         }
-        addFilter(queries.toArray(new String[0]), type, out);
+        addFilter(queries.toArray(new String[0]), type, out, comboboxes, hardwareTypes, hardwareList);
     }
 
-    public void addFilter(String[] queries, String type, Boolean out) {
+    public static void addFilter(String[] queries, String type, Boolean out, ArrayList<JComboBox<Hardware>> comboboxes,
+                                 List<String> hardwareTypes, Map<Integer, Hardware> hardwareList) {
         JComboBox<Hardware> temp = comboboxes.get(hardwareTypes.indexOf(type));
         try {
             if (out) {
