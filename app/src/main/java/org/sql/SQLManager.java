@@ -35,16 +35,12 @@ public class SQLManager {
         return con;
     }
 
-    public ArrayList<Map<String,Integer>> getConfigs() {
-        ArrayList<Map<String,Integer>> configs = new ArrayList<>();
+    public ResultSet getConfigs() {
         try {
-            con.prepareStatement("SELECT");
+            return rs = this.getConnection().prepareStatement(("SELECT * FROM user_owned_config WHERE userID = (SELECT userID from user WHERE name = " + user + " )")).executeQuery();
         } catch (SQLException e) {
-
+            return null;
         }
-
-
-        return configs;
     }
 
     static public void add(String type, int ID) {

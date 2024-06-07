@@ -5,49 +5,33 @@ import java.sql.*;
 
 public class ConfigWindow extends JFrame {
     private JTable configTable;
-    private User user;
+    private Session user;
 
-    public ConfigWindow(User user) {
+    public ConfigWindow(Session session) {
         // Create a table to display the configurations
-        this.user = user;
+        this.session = session;
         configTable = new JTable();
         JScrollPane scrollPane = new JScrollPane(configTable);
         getContentPane().add(scrollPane);
 
-        // Retrieve configurations from the database
-        try {
-            // Execute the query to retrieve configurations
-            Statement statement = user.sqlManager.getConnection().createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM user_owned_config WHERE userID = (SELECT userID from user WHERE name = " + user + " )");
+        ArrayList<Map<String,Integer>> = getConfigs();
 
-            // Create a table model to hold the configurations
+
             DefaultTableModel tableModel = new DefaultTableModel();
             configTable.setModel(tableModel);
 
-            // Add columns to the table model
             tableModel.addColumn("ID");
             tableModel.addColumn("Name");
-            tableModel.addColumn("Value");
 
 
-
-            // Add rows to the table model
             while (resultSet.next()) {
                 int id = resultSet.getInt("ID");
                 String name = resultSet.getString("name");
-                int[] hardwareList = new int[resultSet.getFetchSize()];
-                for (int i = 0; i < App.hardwareTypes.size(); i++) {
-                    hardwareList[i] = resultSet.getInt(App.hardwareTypes.get(i));
-                }
                 tableModel.addRow(new Object[]{id, name,});
             }
 
-            // Close the database connection
             resultSet.close();
             statement.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
     }
 
     // ... (save button logic)
