@@ -5,9 +5,11 @@ import java.sql.*;
 
 public class ConfigWindow extends JFrame {
     private JTable configTable;
+    private User user;
 
-    public ConfigWindow() {
+    public ConfigWindow(User user) {
         // Create a table to display the configurations
+        this.user = user;
         configTable = new JTable();
         JScrollPane scrollPane = new JScrollPane(configTable);
         getContentPane().add(scrollPane);
@@ -15,8 +17,8 @@ public class ConfigWindow extends JFrame {
         // Retrieve configurations from the database
         try {
             // Execute the query to retrieve configurations
-            Statement statement = SQLManager.getConnection().createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM user_owned_config");
+            Statement statement = user.sqlManager.getConnection().createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM user_owned_config WHERE userID = (SELECT userID from user WHERE name = " + user + " )");
 
             // Create a table model to hold the configurations
             DefaultTableModel tableModel = new DefaultTableModel();
@@ -27,12 +29,17 @@ public class ConfigWindow extends JFrame {
             tableModel.addColumn("Name");
             tableModel.addColumn("Value");
 
+
+
             // Add rows to the table model
             while (resultSet.next()) {
-                int id = resultSet.getInt("id");
+                int id = resultSet.getInt("ID");
                 String name = resultSet.getString("name");
-                String value = resultSet.getString("value");
-                tableModel.addRow(new Object[]{id, name, value});
+                int[] hardwareList = new int[resultSet.getFetchSize()];
+                for (int i = 0; i < App.hardwareTypes.size(); i++) {
+                    hardwareList[i] = resultSet.getInt(App.hardwareTypes.get(i));
+                }
+                tableModel.addRow(new Object[]{id, name,});
             }
 
             // Close the database connection

@@ -13,7 +13,7 @@ public class Authentication {
   private Authentication() {
   }
 
-  static public void login() {
+  static public Boolean login() {
     JTextField usernameField = new JTextField();
     JPasswordField passwordField = new JPasswordField();
 
@@ -30,8 +30,10 @@ public class Authentication {
       if (username != "" && password != "" && isValidCredentials(username, password)) {
         Authentication.loggedIn = true;
         JOptionPane.showMessageDialog(null, "Authentication successful!");
+        return true;
       } else {
         JOptionPane.showMessageDialog(null, "Invalid username or password.");
+        return false;
       }
     }
   }
@@ -40,6 +42,7 @@ public class Authentication {
     if (JOptionPane.showConfirmDialog(null, "Are you sure you want to logout?", "Authentication",
         JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
       GUI.authenticationButton.setVisible(false);
+      Session.changeSession("guest", "password");
       Authentication.loggedIn = false;
     }
   }
