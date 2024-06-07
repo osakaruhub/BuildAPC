@@ -3,8 +3,8 @@ package org.sql;
 import javax.swing.JComboBox;
 import java.awt.event.ItemEvent;
 
-public class AccountBar extends JComboBox<String> {
-  public AccountBar(String[] opts) {
+public class Account extends JComboBox<String> {
+  public Account(String[] opts) {
     super(opts);
     this.addItemListener(e -> {
       if (e.getStateChange() == ItemEvent.SELECTED) {
@@ -17,11 +17,8 @@ public class AccountBar extends JComboBox<String> {
           case "Login/Logout":
             if (Authentication.loggedIn) {
               Authentication.logout();
-
             } else {
-              if (Authentication.login()) {
-                Authentication.loggedIn = true;
-              }
+              Authentication.login();
             }
             break;
 
