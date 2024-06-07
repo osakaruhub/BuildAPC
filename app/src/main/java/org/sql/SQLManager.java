@@ -38,7 +38,7 @@ public class SQLManager {
     static public void add(String type, int ID) {
         try {
             ps = con.prepareStatement(
-                "SELECT " + type + ".wattage, " + type + ".price FROM " + type + " WHERE " + type + ".ID = ?");
+                    "SELECT " + type + ".wattage, " + type + ".price FROM " + type + " WHERE " + type + ".ID = ?");
             ps.setInt(1, ID);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
@@ -55,7 +55,7 @@ public class SQLManager {
     static public void remove(String type, int ID) {
         try {
             ps = con.prepareStatement(
-                "SELECT " + type + ".wattage, " + type + ".price FROM " + type + " WHERE " + type + ".ID = ?");
+                    "SELECT " + type + ".wattage, " + type + ".price FROM " + type + " WHERE " + type + ".ID = ?");
             ps.setInt(1, ID);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {

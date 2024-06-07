@@ -1,7 +1,5 @@
 package org.sql;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 import javax.swing.JOptionPane;
@@ -12,15 +10,16 @@ import javax.swing.JOptionPane;
 public class Authentication {
   static Boolean loggedIn = false;
 
-  private Authentication() {}
+  private Authentication() {
+  }
 
   static public void login() {
     JTextField usernameField = new JTextField();
     JPasswordField passwordField = new JPasswordField();
 
     Object[] message = {
-            "Username:", usernameField,
-            "Password:", passwordField
+        "Username:", usernameField,
+        "Password:", passwordField
     };
 
     int option = JOptionPane.showConfirmDialog(null, message, "Authentication", JOptionPane.OK_CANCEL_OPTION);
@@ -38,7 +37,8 @@ public class Authentication {
   }
 
   static public void logout() {
-    if( JOptionPane.showConfirmDialog(null, "Are you sure you want to logout?", "Authentication", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION ) {
+    if (JOptionPane.showConfirmDialog(null, "Are you sure you want to logout?", "Authentication",
+        JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
       GUI.authenticationButton.setVisible(false);
       Authentication.loggedIn = false;
     }
@@ -48,4 +48,3 @@ public class Authentication {
     return SQLManager.getAccount(username) == password.hashCode();
   }
 }
-

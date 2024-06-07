@@ -24,13 +24,13 @@ public class App {
     String user = "guest";
     String password = "password";
 
-    private SQLManager sqlManager;
+    public SQLManager sqlManager;
     private ResultSet rs;
     private FilterManager filterManager;
 
     public App() {
         sqlManager = new SQLManager(url, user, password);
-        filterManager = new FilterManager(sqlManager, hardwareTypes, comboboxes, hardwareList);
+        filterManager = new FilterManager(hardwareTypes, comboboxes, hardwareList);
     
         try {
             while (!sqlManager.connect()) {
@@ -41,7 +41,7 @@ public class App {
             for (String hardwareType : hardwareTypes) {
                 String query = "SELECT name, price, ID FROM " + hardwareType;
                 System.out.println(query);
-                rs = sqlManager.getConnection().createStatement().executeQuery(query);
+                rs = SQLManager.getConnection().createStatement().executeQuery(query);
 
                 String[] choices = new String[rs.getFetchSize()];
                 for (int i = 0; rs.next(); i++) {
@@ -57,7 +57,7 @@ public class App {
                 cb.setAlignmentX(Component.CENTER_ALIGNMENT);
                 cb.addItemListener(new ChangeHardWare(hardwareType));
                 comboBoxSearchable.add(new ComboBoxSearchable(cb));
-                gui.panel.add(cb);
+                GUI.panel.add(cb);
 
                 comboboxes.add(cb);
             }

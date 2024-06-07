@@ -4,3 +4,5 @@
 # Ignore Gradle build output directory
 app/bin
 app/build
+app/settings
+.settings

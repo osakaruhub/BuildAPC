@@ -1,11 +1,11 @@
 package org.sql;
 
 import javax.swing.JComboBox;
-import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
 
-public class Account extends JComboBox {
-  public Account() {
+public class Account extends JComboBox<String> {
+  public Account(String[] opts) {
+    super(opts);
     this.addItemListener(e -> {
       if (e.getStateChange() == ItemEvent.SELECTED) {
         String opt = (String) e.getItem();
@@ -27,5 +27,5 @@ public class Account extends JComboBox {
         }
       }
     });
-    }
   }
+}

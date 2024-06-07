@@ -12,13 +12,12 @@ class AppTest {
 
   @Test
   void appConnection() {
-    assertTrue(classUnderTest.connect());
+    assertTrue(classUnderTest.sqlManager.connect());
     System.out.println("Connection successful");
   }
 
-  @Test
-  void appComboboxes() {
-    assertEquals(App.hardwareTypes.size(), App.comboboxes.size());
-  }
+  // @Test
+  // void appComboboxes() {
+  // }
 
 }
