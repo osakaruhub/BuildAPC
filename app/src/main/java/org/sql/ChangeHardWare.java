@@ -28,7 +28,7 @@ class ChangeHardWare implements ItemListener {
                 FilterManager.filterByItem(type, previousHardwareId, false);
                 App.config.put(type, null);
             }
-            App.checkWattage();
+            FilterManager.checkWattage();
         }
     }
 }

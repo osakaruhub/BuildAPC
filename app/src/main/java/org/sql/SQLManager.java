@@ -5,9 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 public class SQLManager {
     private static Connection con;
@@ -35,9 +33,12 @@ public class SQLManager {
         return con;
     }
 
-    public ResultSet getConfigs() {
+    static public ResultSet getConfigs(String user) {
         try {
-            return rs = this.getConnection().prepareStatement(("SELECT * FROM user_owned_config WHERE userID = (SELECT userID from user WHERE name = " + user + " )")).executeQuery();
+            return getConnection().prepareStatement(
+                    ("SELECT * FROM user_owned_config WHERE userID = (SELECT userID from user WHERE name = " + user
+                            + " )"))
+                    .executeQuery();
         } catch (SQLException e) {
             return null;
         }

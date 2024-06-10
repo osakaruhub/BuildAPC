@@ -24,11 +24,11 @@ public class Session {
     }
 
     static public void setPassword(String password) {
-        this.password = password;
+        Session.password = password;
     }
 
     static public void setName(String name) {
-            this.name = name;
+        Session.name = name;
     }
 
     public String getName() {

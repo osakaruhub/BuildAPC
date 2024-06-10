@@ -30,12 +30,12 @@ public class Authentication {
       if (username != "" && password != "" && isValidCredentials(username, password)) {
         Authentication.loggedIn = true;
         JOptionPane.showMessageDialog(null, "Authentication successful!");
-        return true;
       } else {
         JOptionPane.showMessageDialog(null, "Invalid username or password.");
         return false;
       }
     }
+    return true;
   }
 
   static public void logout() {
