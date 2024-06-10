@@ -1,0 +1,130 @@
+@startuml
+
+entity "brand" {
+  ID : INT <<PK>>
+  name : VARCHAR(20)
+}
+
+entity "mainboard" {
+  ID INT <<PK>>
+  brandID : INT <<FK>>
+  chipset INT
+  form VARCHAR(20) <<FK>>
+  ethernet_speed INT
+  IO VARCHAR(255)
+  other_features VARHAR(255)
+  price INT
+}
+
+entity "cpu" {
+  ID : INT <<PK>>
+  brandID : INT <<FK>>
+  line : VARCHAR(50)
+  name : VARCHAR(50)
+  core_count : INT
+  thread_count : INT
+  clock_speed : INT 
+  form : VARCHAR(10)
+  tdp : INT
+  price : INT
+}
+
+entity "gpu" {
+  ID : INT <<PK>>
+  brandID : INT <<FK>>
+  line : VARCHAR(50)
+  name : VARCHAR(50)
+  clock_speed : INT 
+  IO : VARCHAR(255)
+  price : INT
+}
+
+entity "ram" {
+  ID : INT <<PK>>
+  brandID : INT <<FK>>
+  name : VARCHAR(50)
+  clock_speed : INT 
+  timing : INT
+  type : VARCHAR(50)
+  price : INT
+}
+
+entity "psu" {
+  ID : INT <<PK>>
+  brandID : INT <<FK>>
+  name : VARCHAR(50)
+  wattage : INT
+  type : VARCHAR(50)
+  price : INT
+}
+
+entity "hdd" {
+  ID : INT <<PK>>
+  brandID : INT <<FK>>
+  name : VARCHAR(50)
+  storage : INT
+  rpm : INT
+  price : INT
+}
+
+entity "ssd" {
+  ID : INT <<PK>>
+  brandID : INT <<FK>>
+  name : VARCHAR(50)
+  storage INT
+  type : VARCHAR(50)
+  price : INT
+}
+
+entity "case" {
+  ID : INT <<PK>>
+  brandID : INT <<FK>>
+  name : VARCHAR(50)
+  form : VARCHAR(10) <<FK>>
+  price : INT
+}
+
+entity "size" {
+  name : VARCHAR(20) <<PK>>
+  size : INT
+}
+
+entity "fan" {
+  ID : INT <<PK>>
+  brandID : INT <<FK>>
+  name : VARCHAR(50)
+  size : INT
+  type : VARCHAR(50)
+  price : INT
+}
+
+entity "cpu_cooler" {
+  ID : INT <<PK>>
+  brandID : INT <<FK>>
+  name : VARCHAR(50)
+  form : VARCHAR(10)
+  price : INT
+}
+
+entity "radiator" {
+  ID : INT <<PK>>
+  brandID : INT NOT NULL <<FK>>
+  name : VARCHAR(50)
+  size : INT 
+  price : INT
+}
+
+mainboard -- brand
+cpu -- brand
+gpu -- brand
+ram -- brand
+psu -- brand
+hdd -- brand
+ssd -- brand
+case -- brand
+fan -- brand
+cpu_cooler -- brand
+radiator -- brand
+case -- size
+mainboard -- size
+@enduml
