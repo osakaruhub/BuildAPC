@@ -12,7 +12,7 @@ public class App {
             "fan", "cpu_cooler", "radiator");
     final GUI gui = new GUI();
 
-    static Map<String, Integer> config = new HashMap<>();
+    static Map<String, Integer> config = new TreeMap<>();
     static final Map<Integer, Hardware> hardwareList = new HashMap<>();
 
     static final String url = "jdbc:mariadb://localhost:3306/PC_Builder";

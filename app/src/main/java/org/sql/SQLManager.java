@@ -36,7 +36,6 @@ public class SQLManager {
         }
     }
 
-
     static public Connection getConnection() {
         return con;
     }
@@ -50,11 +49,11 @@ public class SQLManager {
         }
         add.substring(0, add.length() - 1);
         /*
-         for (int hardware:config
-             ) {
-            add += hardware + ",";
-         }
-        */
+         * for (int hardware:config
+         * ) {
+         * add += hardware + ",";
+         * }
+         */
         add += ");";
         try {
             SQLManager.getConnection().prepareCall(add).executeUpdate();
@@ -78,11 +77,13 @@ public class SQLManager {
     static public void add(String type, int ID) {
         try {
             ps = con.prepareStatement(
-                    "SELECT " + type + ".wattage, " + type + ".price FROM " + type + " WHERE " + type + ".ID = ?");
+                    "SELECT " + (type.equals("fan") || type.equals("gpu") ? type + ".tdp," : "") + type
+                            + ".price FROM " + type
+                            + " WHERE " + type + ".ID = ?");
             ps.setInt(1, ID);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                int wattage = rs.getInt("wattage");
+                int wattage = rs.getInt("tdp");
                 int price = rs.getInt("price");
                 config.put("wattage", config.getOrDefault("wattage", 0) + wattage);
                 config.put("price", config.getOrDefault("price", 0) - price);
@@ -97,11 +98,13 @@ public class SQLManager {
     static public void remove(String type, int ID) {
         try {
             ps = con.prepareStatement(
-                    "SELECT " + type + ".wattage, " + type + ".price FROM " + type + " WHERE " + type + ".ID = ?");
+                    "SELECT " + (type.equals("cpu") || type.equals("gpu") ? type + ".tdp," : "") + type
+                            + ".price FROM " + type
+                            + " WHERE " + type + ".ID = ?");
             ps.setInt(1, ID);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                int wattage = rs.getInt("wattage");
+                int wattage = rs.getInt("tdp");
                 int price = rs.getInt("price");
                 config.put("wattage", config.getOrDefault("wattage", 0) - wattage);
                 config.put("price", config.getOrDefault("price", 0) - price);

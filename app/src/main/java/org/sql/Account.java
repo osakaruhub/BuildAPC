@@ -7,9 +7,7 @@ public class Account extends JComboBox<String> {
   public Account(String[] opts) {
     super(opts);
     this.addItemListener(e -> {
-      if (e.getStateChange() == ItemEvent.SELECTED) {
-        String opt = (String) e.getItem();
-        switch (opt) {
+        switch ((String) e.getItem()) {
           case "Configs":
             if (Authentication.loggedIn) {
               GUI.openConfigWindow();
@@ -29,7 +27,6 @@ public class Account extends JComboBox<String> {
           default:
             break;
         }
-      }
     });
   }
 }

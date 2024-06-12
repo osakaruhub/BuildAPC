@@ -8,7 +8,6 @@ public class FilterManager {
     private static List<String> hardwareTypes;
     private static ArrayList<JComboBox<Hardware>> comboBoxes;
     private static Map<Integer, Hardware> hardwareList;
-    static Map<String, Integer> config = new HashMap<>();
     static ResultSet rs;
 
     public FilterManager(List<String> hardwareTypes, ArrayList<JComboBox<Hardware>> comboboxes,
@@ -117,7 +116,7 @@ public class FilterManager {
     }
 
     static public void checkWattage() {
-        if (config.get("wattage") > config.get("psu")) {
+        if (App.config.get("wattage") > App.config.get("psu")) {
             JOptionPane.showMessageDialog(null, "PSU Overload",
                     "Your Config's power consumption is higher than your PSU can handle.\nconsider downgrading or using a better PSU",
                     JOptionPane.INFORMATION_MESSAGE);

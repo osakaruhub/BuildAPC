@@ -118,6 +118,7 @@ CREATE TABLE IF NOT EXISTS gpu (
   name VARCHAR(50),
   clock_speed INT,
   IO VARCHAR(255), -- CSV for ports e.g., "HDMI, DP"
+  tdp INT,
   price INT,
   PRIMARY KEY (ID),
   FOREIGN KEY (brandID) REFERENCES brand (ID)
