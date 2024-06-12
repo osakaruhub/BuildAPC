@@ -18,22 +18,6 @@ public class FilterManager {
         FilterManager.hardwareList = hardwareList;
     }
 
-    public void createFilters() {
-        JSlider[] PriceFilterSlider = new JSlider[hardwareList.size()];
-        try {
-            for (int i = 0; i < PriceFilterSlider.length; i++) {
-                PriceFilterSlider[i] = new JSlider(JSlider.VERTICAL, 0,
-                        SQLManager.getConnection().prepareStatement("SELECT MAX(cpu.price) as maxPrice FROM cpu")
-                                .executeQuery().getInt("maxPrice"));
-                PriceFilterSlider[i]
-                        .addChangeListener(new SliderFilter(PriceFilterSlider[i].getMaximum(), "cpu", "price"));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        // Add sliders to legend or any other component
-    }
-
     public static void filterByValue(String type, String characteristic, Object value, Boolean out) {
         String query = "SELECT " + type + ".ID FROM " + type + " WHERE " + type + "." + characteristic + " = " + value;
         addFilter(new String[] { query }, type, out, comboboxes, hardwareTypes, hardwareList);

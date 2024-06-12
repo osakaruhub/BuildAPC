@@ -1,59 +1,51 @@
 package org.sql;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
+import com.jidesoft.swing.ComboBoxSearchable;
+import java.awt.*;
+import java.sql.SQLException;
+import java.util.*;
+import javax.swing.*;
 
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JSlider;
-
-public class GUI extends JFrame {
-
-    JCheckBox[] filterButtons = new JCheckBox[5];
-    // Map<String, JSlider[]> filterSliders;
-    JSlider[] PriceFilterSlider;
-    static final JPanel panel = new JPanel();
-    static final JPanel legend = new JPanel();
-    static final JPanel headerPanel = new JPanel();
-    static final JButton authenticationButton = new JButton("Authenticate"), collapseButton = new JButton();
+public class GUI {
+    JPanel panel;
+    static JPanel legend;
+    JPanel topPanel;
+    JButton configButton;
+    Account user;
+    ArrayList<JComboBox<Hardware>> comboboxes;
+    ArrayList<ComboBoxSearchable> comboBoxSearchable;
 
     public GUI() {
-
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setSize(980, 720);
-
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        legend.setPreferredSize(new Dimension(100, this.getHeight()));
-        headerPanel.setLayout(new BorderLayout());
-
-        headerPanel.add(authenticationButton, BorderLayout.EAST);
-
-        legend.setLayout(new FlowLayout(FlowLayout.CENTER));
-
-        collapseButton.addActionListener(new Collapsable());
-
-        headerPanel.add(collapseButton, BorderLayout.WEST);
-        this.add(headerPanel, BorderLayout.NORTH);
-
-        this.add(panel);
-        this.add(legend, BorderLayout.WEST);
-
-        filterButtons[0] = new JCheckBox("AMD");
-        filterButtons[0].addItemListener(new Filter("cpu", "brand", "AMD"));
-
-        legend.add(filterButtons[0]);
-
-        this.setVisible(true);
-        this.pack(); // sets size of the frame automaticly
-        this.setTitle("PC-Builder");
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        comboboxes = new ArrayList<>();
+        comboBoxSearchable = new ArrayList<>();
+        initialize();
     }
 
-    public void openConfigWindows() {
+    private void initialize() {
+        panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
+        topPanel = new JPanel();
+        topPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+
+        configButton = new JButton("Configs");
+        user = new Account({"Configs","Login/Logout"});
+        topPanel.add(user);
+    }
+
+    public void createFilters() {
+        JSlider[] priceFilterSlider = new JSlider[comboboxes.size()];
+        try {
+            for (int i = 0; i < priceFilterSlider.length; i++) {
+                priceFilterSlider[i] = new JSlider(JSlider.VERTICAL, 0,
+                        SQLManager.getConnection().prepareStatement("SELECT MAX(cpu.price) as maxPrice FROM cpu")
+                                .executeQuery().getInt("maxPrice"));
+                priceFilterSlider[i]
+                        .addChangeListener(new SliderFilter(priceFilterSlider[i].getMaximum(), "cpu", "price"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        // Add sliders to legend or any other component if needed
     }
 }

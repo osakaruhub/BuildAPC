@@ -2,10 +2,11 @@ package org.sql;
 
 import javax.swing.*;
 
-import java.awt.event.ActionListener;
+
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import javax.swing.JTextField;
 
 import javax.swing.table.DefaultTableModel;
 import java.sql.*;
@@ -46,18 +47,44 @@ public class ConfigWindow extends JFrame {
 
                 if (row >= 0) {
 
-                    Object value = configTable.getValueAt(row, 0);
+                    int value = (int) configTable.getValueAt(row, 0);
 
                     System.out.println("Clicked on cell: " + value);
 
                     // TODO: set current config from chosen saved config
+                    ResultSet config = Session.getConfig(value, session.getName() );
 
+                    // App.setConfig(config.toString());
                 }
 
             }
 
         });
+
+
+
     }
+
+    public Boolean save() {
+        JTextField nameField = new JTextField();
+
+        Object[] message = {
+                "name:", nameField,
+        };
+
+        int option = JOptionPane.showConfirmDialog(null, message, "Authentication", JOptionPane.OK_CANCEL_OPTION);
+
+        if (option == JOptionPane.OK_OPTION) {
+            String name = nameField.getText();
+            if (!name.equals("")) {
+                SQLManager.addConfig(App.config);
+            } else {
+            }
+        }
+        return true;
+    }
+
+
 
     // ... (save button logic)
 

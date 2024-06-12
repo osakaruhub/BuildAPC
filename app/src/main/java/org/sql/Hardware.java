@@ -1,29 +1,32 @@
 package org.sql;
 
-/**
- * Hardware
- */
 public class Hardware {
-  private int id;
-  private String name;
-  private String type;
+    private int id;
+    private String name;
+    private String type;
+    private long price;
 
-  public Hardware(int id, String name, String type) {
-    this.id = id;
-    this.name = name;
-    this.type = type;
-  }
+    public Hardware(int id, String name, String type, long price) {
+        this.id = id;
+        this.name = name;
+        this.type = type;
+        this.price = price;
+    }
 
-  public int getId() {
-    return id;
-  }
+    public int getId() {
+        return id;
+    }
 
-  public String getType() {
-    return type;
-  }
+    public String getType() {
+        return type;
+    }
 
-  @Override
-  public String toString() {
-    return name;
-  }
+    public long getPrice() {
+        return price;
+    }
+
+    @Override
+    public String toString() {
+        return name + " - $" + price;
+    }
 }

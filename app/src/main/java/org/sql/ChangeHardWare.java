@@ -3,10 +3,7 @@ package org.sql;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
-/**
- * ChangeHardWare
- */
-class ChangeHardWare implements ItemListener {
+public class ChangeHardWare implements ItemListener {
     String type;
 
     public ChangeHardWare(String type) {
@@ -26,7 +23,7 @@ class ChangeHardWare implements ItemListener {
                 int previousHardwareId = App.config.get(type);
                 SQLManager.remove(type, previousHardwareId);
                 FilterManager.filterByItem(type, previousHardwareId, false);
-                App.config.put(type, null);
+                App.config.put(type, 0);
             }
             FilterManager.checkWattage();
         }

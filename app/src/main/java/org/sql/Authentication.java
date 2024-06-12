@@ -41,7 +41,6 @@ public class Authentication {
   static public void logout() {
     if (JOptionPane.showConfirmDialog(null, "Are you sure you want to logout?", "Authentication",
         JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-      GUI.authenticationButton.setVisible(false);
       Session.changeSession("guest", "password");
       Authentication.loggedIn = false;
     }

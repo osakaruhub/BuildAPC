@@ -5,10 +5,13 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class SQLManager {
     private static Connection con;
+    public static Connection SessionConnection;
     private static PreparedStatement ps;
     private String user;
     private String password;
@@ -21,7 +24,11 @@ public class SQLManager {
 
     public Boolean connect() {
         try {
-            con = DriverManager.getConnection(App.url, user, password);
+            if (user.equals("guest")) {
+                con = DriverManager.getConnection(App.url, user, password);
+            } else {
+                SessionConnection = DriverManager.getConnection(App.url, user, password);
+            }
             return true;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -29,8 +36,32 @@ public class SQLManager {
         }
     }
 
+
     static public Connection getConnection() {
         return con;
+    }
+
+    static public Boolean addConfig(Map<String, Integer> config) {
+        String add = "INSERT INTO TABLE user_owned_config VALUES (";
+
+        for (int i = 0; i < App.hardwareTypes.size(); i++) {
+
+            add += config.getOrDefault(App.hardwareTypes.get(i), null) + ",";
+        }
+        add.substring(0, add.length() - 1);
+        /*
+         for (int hardware:config
+             ) {
+            add += hardware + ",";
+         }
+        */
+        add += ");";
+        try {
+            SQLManager.getConnection().prepareCall(add).executeUpdate();
+        } catch (SQLException e) {
+            return false;
+        }
+        return true;
     }
 
     static public ResultSet getConfigs(String user) {

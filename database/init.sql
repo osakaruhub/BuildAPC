@@ -515,7 +515,7 @@ INSERT INTO radiator (brandID, name, size, price) VALUES
   ((SELECT brand.ID FROM brand WHERE brand.name = 'Corsair'), 'Hydro X Series XR5 480mm', 480, 129);
 
 CREATE TABLE IF NOT EXISTS user_owned_config (
-  userID INT NOT NULL,
+  user INT NOT NULL,
   configID INT NOT NULL AUTO_INCREMENT,
   mainboard INT,
   ram INT,
@@ -528,7 +528,7 @@ CREATE TABLE IF NOT EXISTS user_owned_config (
   fan INT,
   radiator INT,
   cpu_cooler INT,
-  PRIMARY KEY (userID, configID),
+  PRIMARY KEY (configID),
   FOREIGN KEY (userID) REFERENCES user(userID),
   FOREIGN KEY (mainboard) REFERENCES mainboard(ID),
   FOREIGN KEY (ram) REFERENCES ram(ID),
