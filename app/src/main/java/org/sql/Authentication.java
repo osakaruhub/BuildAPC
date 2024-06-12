@@ -38,11 +38,14 @@ public class Authentication {
     return true;
   }
 
-  static public void logout() {
+  static public Boolean logout() {
     if (JOptionPane.showConfirmDialog(null, "Are you sure you want to logout?", "Authentication",
         JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
       Session.changeSession("guest", "password");
       Authentication.loggedIn = false;
+      return true;
+    } else {
+      return false;
     }
   }
 

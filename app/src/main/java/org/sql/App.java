@@ -9,7 +9,7 @@ import javax.swing.*;
 
 public class App {
     static final List<String> hardwareTypes = List.of("mainboard", "cpu", "gpu", "ram", "psu", "ssd", "hdd", "ccase",
-        "fan", "cpu_cooler", "radiator");
+            "fan", "cpu_cooler", "radiator");
     final GUI gui = new GUI();
 
     static Map<String, Integer> config = new HashMap<>();
@@ -27,16 +27,6 @@ public class App {
         sqlManager = new SQLManager(user, password);
         filterManager = new FilterManager(hardwareTypes, gui.comboboxes, hardwareList);
 
-        JFrame frame = new JFrame("PC Builder");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(800, 600);
-        frame.setLayout(new BorderLayout());
-
-        JScrollPane scrollPane = new JScrollPane(gui.panel);
-        frame.add(scrollPane, BorderLayout.CENTER);
-        frame.add(gui.topPanel, BorderLayout.NORTH);
-        frame.add(gui.checkCompatibilityButton, BorderLayout.SOUTH);
-
         try {
             while (!sqlManager.connect()) {
                 System.out.println("Program couldn't connect. trying in 5s...");
@@ -50,22 +40,25 @@ public class App {
 
                 List<Hardware> choices = new ArrayList<>();
                 while (rs.next()) {
-                    Hardware hardware = new Hardware(rs.getInt("ID"), rs.getString("name"), hardwareType, rs.getLong("price"));
+                    Hardware hardware = new Hardware(rs.getInt("ID"), rs.getString("name"), hardwareType,
+                            rs.getLong("price"));
                     hardwareList.put(rs.getInt("ID"), hardware);
                     choices.add(hardware);
                 }
 
                 JComboBox<Hardware> cb = new JComboBox<>(choices.toArray(new Hardware[0]));
                 cb.setToolTipText("Add a " + hardwareType);
-                cb.setPreferredSize(new Dimension(400,20));
+                cb.setPreferredSize(new Dimension(400, 20));
                 cb.setMaximumSize(cb.getPreferredSize());
                 cb.setAlignmentX(Component.CENTER_ALIGNMENT);
+                cb.setSelectedItem(null);
                 cb.addItemListener(new ChangeHardWare(hardwareType));
                 gui.comboBoxSearchable.add(new ComboBoxSearchable(cb));
 
                 JPanel comboPanel = new JPanel();
                 comboPanel.setLayout(new BoxLayout(comboPanel, BoxLayout.X_AXIS));
-                comboPanel.add(new JLabel(hardwareType.substring(0, 1).toUpperCase() + hardwareType.substring(1) + ": "));
+                comboPanel
+                        .add(new JLabel(hardwareType.substring(0, 1).toUpperCase() + hardwareType.substring(1) + ": "));
                 comboPanel.add(cb);
 
                 gui.panel.add(comboPanel);
@@ -80,9 +73,7 @@ public class App {
         filterManager.createFilters();
         initConfig();
 
-        gui.checkCompatibilityButton.addActionListener(e -> FilterManager.checkWattage());
-
-        frame.setVisible(true);
+        gui.frame.setVisible(true);
     }
 
     public void initConfig() {

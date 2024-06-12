@@ -1,13 +1,9 @@
 package org.sql;
 
 import javax.swing.*;
-
-
-
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JTextField;
-
 import javax.swing.table.DefaultTableModel;
 import java.sql.*;
 
@@ -15,10 +11,16 @@ public class ConfigWindow extends JFrame {
     private JTable configTable;
 
     public ConfigWindow() {
-        // Create a table to display the configurations
-        configTable = new JTable();
         JScrollPane scrollPane = new JScrollPane(configTable);
         getContentPane().add(scrollPane);
+
+        this.setVisible(true);
+
+    }
+
+    public void DisplayConfigs() {
+
+        configTable = new JTable();
 
         ResultSet resultSet = SQLManager.getConfigs(Session.getName());
 
@@ -35,7 +37,7 @@ public class ConfigWindow extends JFrame {
                 tableModel.addRow(new Object[] { id, name, });
             }
             resultSet.close();
-        } catch (Exception e) {
+        } catch (SQLException e) {
         }
         configTable.addMouseListener(new MouseAdapter() {
 
@@ -50,7 +52,7 @@ public class ConfigWindow extends JFrame {
                     System.out.println("Clicked on cell: " + value);
 
                     // TODO: set current config from chosen saved config
-                    ResultSet config = Session.getConfig(value, Session.getName() );
+                    ResultSet config = Session.getConfig(value, Session.getName());
 
                     // App.setConfig(config.toString());
                 }
@@ -58,9 +60,6 @@ public class ConfigWindow extends JFrame {
             }
 
         });
-
-
-
     }
 
     public Boolean save() {
@@ -73,18 +72,15 @@ public class ConfigWindow extends JFrame {
         int option = JOptionPane.showConfirmDialog(null, message, "Authentication", JOptionPane.OK_CANCEL_OPTION);
 
         if (option == JOptionPane.OK_OPTION) {
-            String name = nameField.getText();
-            if (!name.equals("")) {
-                SQLManager.addConfig(App.config);
-            } else {
-            }
+            Boolean cancel = true;
+            do {
+                String name = nameField.getText();
+                if (name.equals("")) {
+                    cancel = JOptionPane.showConfirmDialog(null, "name cannot be empty!", "Error",
+                            JOptionPane.OK_CANCEL_OPTION) != JOptionPane.OK_OPTION;
+                }
+            } while (!cancel);
         }
         return true;
     }
-
-
-
-    // ... (save button logic)
-
-    // ... (main method)
 }

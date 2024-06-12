@@ -19,12 +19,17 @@ public class FilterManager {
     }
 
     public void createFilters() {
+        GUI.checkCompatibilityButton.addActionListener(e -> FilterManager.checkWattage());
         JSlider[] priceFilterSlider = new JSlider[App.hardwareTypes.size()];
         try {
             for (int i = 0; i < priceFilterSlider.length; i++) {
-                priceFilterSlider[i] = new JSlider(JSlider.VERTICAL, 0,
-                        SQLManager.getConnection().prepareStatement("SELECT MAX("+ App.hardwareTypes.get(i)+".price) as maxPrice FROM "+ hardwareTypes.get(i))
-                                .executeQuery().getInt("maxPrice"));
+                rs = SQLManager.getConnection()
+                        .prepareStatement("SELECT MAX(" + App.hardwareTypes.get(i) + ".price) as maxPrice FROM "
+                                + hardwareTypes.get(i))
+                        .executeQuery();
+                rs.next();
+                int maxPrice = rs.getInt("maxPrice");
+                priceFilterSlider[i] = new JSlider(JSlider.VERTICAL, 0, maxPrice, 0);
                 priceFilterSlider[i]
                         .addChangeListener(new SliderFilter(priceFilterSlider[i].getMaximum(), "cpu", "price"));
             }
@@ -33,6 +38,10 @@ public class FilterManager {
         }
         GUI.pricefilterSlider = priceFilterSlider;
         // Add sliders to legend or any other component if needed
+        try {
+            rs.close();
+        } catch (Exception e) {
+        }
     }
 
     public static void filterByValue(String type, String characteristic, Object value, Boolean out) {

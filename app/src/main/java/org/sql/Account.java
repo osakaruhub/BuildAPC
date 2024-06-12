@@ -15,14 +15,17 @@ public class Account extends JComboBox<String> {
               GUI.openConfigWindow();
             }
             break;
-          case "Login/Logout":
-            if (Authentication.loggedIn) {
-              Authentication.logout();
-            } else {
-              Authentication.login();
+          case "Login":
+            if (!Authentication.loggedIn && Authentication.login()) {
+              this.remove(1);
+              this.addItem("Logout");
             }
             break;
-
+          case "Logout":
+            if (Authentication.loggedIn && Authentication.logout()) {
+              this.remove(1);
+              this.addItem("Login");
+            }
           default:
             break;
         }
