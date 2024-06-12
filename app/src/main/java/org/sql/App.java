@@ -20,7 +20,7 @@ public class App {
     static final ArrayList<ComboBoxSearchable> comboBoxSearchable = new ArrayList<>(hardwareTypes.size());
     static final Map<Integer, Hardware> hardwareList = new HashMap<>();
   
-    final String url = "jdbc:mariadb://localhost:3306/PC_Builder";
+    static final String url = "jdbc:mariadb://localhost:3306/PC_Builder";
     String user = "guest";
     String password = "password";
 
@@ -29,7 +29,7 @@ public class App {
     private FilterManager filterManager;
 
     public App() {
-        sqlManager = new SQLManager(url, user, password);
+        sqlManager = new SQLManager(user, password);
         filterManager = new FilterManager(hardwareTypes, comboboxes, hardwareList);
     
         try {

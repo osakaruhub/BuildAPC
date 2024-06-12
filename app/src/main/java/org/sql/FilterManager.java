@@ -13,9 +13,9 @@ public class FilterManager {
 
     public FilterManager(List<String> hardwareTypes, ArrayList<JComboBox<Hardware>> comboboxes,
             Map<Integer, Hardware> hardwareList) {
-        this.hardwareTypes = hardwareTypes;
-        this.comboboxes = comboboxes;
-        this.hardwareList = hardwareList;
+        FilterManager.hardwareTypes = hardwareTypes;
+        FilterManager.comboboxes = comboboxes;
+        FilterManager.hardwareList = hardwareList;
     }
 
     public void createFilters() {
@@ -36,7 +36,7 @@ public class FilterManager {
 
     public static void filterByValue(String type, String characteristic, Object value, Boolean out) {
         String query = "SELECT " + type + ".ID FROM " + type + " WHERE " + type + "." + characteristic + " = " + value;
-        addFilter(new String[]{query}, type, out, comboboxes, hardwareTypes, hardwareList);
+        addFilter(new String[] { query }, type, out, comboboxes, hardwareTypes, hardwareList);
     }
 
     public static void filterByItem(String type, int ID, Boolean out) {
@@ -78,7 +78,7 @@ public class FilterManager {
     }
 
     public static void addFilter(String[] queries, String type, Boolean out, ArrayList<JComboBox<Hardware>> comboboxes,
-                                 List<String> hardwareTypes, Map<Integer, Hardware> hardwareList) {
+            List<String> hardwareTypes, Map<Integer, Hardware> hardwareList) {
         JComboBox<Hardware> temp = comboboxes.get(hardwareTypes.indexOf(type));
         try {
             if (out) {
@@ -106,7 +106,7 @@ public class FilterManager {
         }
     }
 
-    public void checkWattage() {
+    static public void checkWattage() {
         if (config.get("wattage") > config.get("psu")) {
             JOptionPane.showMessageDialog(null, "PSU Overload",
                     "Your Config's power consumption is higher than your PSU can handle.\nconsider downgrading or using a better PSU",
