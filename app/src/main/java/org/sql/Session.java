@@ -11,7 +11,7 @@ public class Session {
     private ArrayList<Map<String,Integer>> configs = new ArrayList<>();
     static public SQLManager sqlManager = new SQLManager(name, password);
 
-    private Session() { sqlManager.connect(); }
+   public   Session() { sqlManager.connect(); }
 
     static public void changeSession(String name, String password){
         setName(name);
@@ -43,7 +43,7 @@ public class Session {
         Session.name = name;
     }
 
-    public String getName() {
+    public static String getName() {
         return name;
     }
 

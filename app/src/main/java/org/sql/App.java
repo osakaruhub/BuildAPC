@@ -57,6 +57,7 @@ public class App {
 
                 JComboBox<Hardware> cb = new JComboBox<>(choices.toArray(new Hardware[0]));
                 cb.setToolTipText("Add a " + hardwareType);
+                cb.setPreferredSize(new Dimension(400,20));
                 cb.setMaximumSize(cb.getPreferredSize());
                 cb.setAlignmentX(Component.CENTER_ALIGNMENT);
                 cb.addItemListener(new ChangeHardWare(hardwareType));
@@ -76,7 +77,7 @@ public class App {
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
-        gui.createFilters();
+        filterManager.createFilters();
         initConfig();
 
         gui.checkCompatibilityButton.addActionListener(e -> FilterManager.checkWattage());

@@ -13,16 +13,14 @@ import java.sql.*;
 
 public class ConfigWindow extends JFrame {
     private JTable configTable;
-    private Session session;
 
-    public ConfigWindow(Session session) {
+    public ConfigWindow() {
         // Create a table to display the configurations
-        this.session = session;
         configTable = new JTable();
         JScrollPane scrollPane = new JScrollPane(configTable);
         getContentPane().add(scrollPane);
 
-        ResultSet resultSet = SQLManager.getConfigs(session.getName());
+        ResultSet resultSet = SQLManager.getConfigs(Session.getName());
 
         DefaultTableModel tableModel = new DefaultTableModel();
         configTable.setModel(tableModel);
@@ -52,7 +50,7 @@ public class ConfigWindow extends JFrame {
                     System.out.println("Clicked on cell: " + value);
 
                     // TODO: set current config from chosen saved config
-                    ResultSet config = Session.getConfig(value, session.getName() );
+                    ResultSet config = Session.getConfig(value, Session.getName() );
 
                     // App.setConfig(config.toString());
                 }

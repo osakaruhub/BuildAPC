@@ -6,7 +6,7 @@ import javax.swing.*;
 
 public class FilterManager {
     private static List<String> hardwareTypes;
-    private static ArrayList<JComboBox<Hardware>> comboboxes;
+    private static ArrayList<JComboBox<Hardware>> comboBoxes;
     private static Map<Integer, Hardware> hardwareList;
     static Map<String, Integer> config = new HashMap<>();
     static ResultSet rs;
@@ -14,13 +14,30 @@ public class FilterManager {
     public FilterManager(List<String> hardwareTypes, ArrayList<JComboBox<Hardware>> comboboxes,
             Map<Integer, Hardware> hardwareList) {
         FilterManager.hardwareTypes = hardwareTypes;
-        FilterManager.comboboxes = comboboxes;
+        FilterManager.comboBoxes = comboboxes;
         FilterManager.hardwareList = hardwareList;
+    }
+
+    public void createFilters() {
+        JSlider[] priceFilterSlider = new JSlider[App.hardwareTypes.size()];
+        try {
+            for (int i = 0; i < priceFilterSlider.length; i++) {
+                priceFilterSlider[i] = new JSlider(JSlider.VERTICAL, 0,
+                        SQLManager.getConnection().prepareStatement("SELECT MAX("+ App.hardwareTypes.get(i)+".price) as maxPrice FROM "+ hardwareTypes.get(i))
+                                .executeQuery().getInt("maxPrice"));
+                priceFilterSlider[i]
+                        .addChangeListener(new SliderFilter(priceFilterSlider[i].getMaximum(), "cpu", "price"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        GUI.pricefilterSlider = priceFilterSlider;
+        // Add sliders to legend or any other component if needed
     }
 
     public static void filterByValue(String type, String characteristic, Object value, Boolean out) {
         String query = "SELECT " + type + ".ID FROM " + type + " WHERE " + type + "." + characteristic + " = " + value;
-        addFilter(new String[] { query }, type, out, comboboxes, hardwareTypes, hardwareList);
+        addFilter(new String[] { query }, type, out, comboBoxes, hardwareTypes, hardwareList);
     }
 
     public static void filterByItem(String type, int ID, Boolean out) {
@@ -58,7 +75,7 @@ public class FilterManager {
             default:
                 break;
         }
-        addFilter(queries.toArray(new String[0]), type, out, comboboxes, hardwareTypes, hardwareList);
+        addFilter(queries.toArray(new String[0]), type, out, comboBoxes, hardwareTypes, hardwareList);
     }
 
     public static void addFilter(String[] queries, String type, Boolean out, ArrayList<JComboBox<Hardware>> comboboxes,

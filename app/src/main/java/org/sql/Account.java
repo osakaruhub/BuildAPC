@@ -11,8 +11,9 @@ public class Account extends JComboBox<String> {
         String opt = (String) e.getItem();
         switch (opt) {
           case "Configs":
-            // if (Authentication.loggedIn) -> GUI.openConfigWindow();
-
+            if (Authentication.loggedIn) {
+              GUI.openConfigWindow();
+            }
             break;
           case "Login/Logout":
             if (Authentication.loggedIn) {
