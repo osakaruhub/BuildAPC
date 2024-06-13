@@ -85,6 +85,9 @@ public class App {
     }
 
     public static void main(String[] args) {
+        // if (args[0] != null || args[1] != null && Authentication.isValidCredentials(args[0], args[1])) {
+        //     Session.changeSession(args[0], Integer.parseInt(args[1]));
+        // }
         new App();
     }
 }

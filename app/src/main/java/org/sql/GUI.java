@@ -7,7 +7,7 @@ import java.util.*;
 import javax.swing.*;
 
 public class GUI {
-    JFrame frame;
+    static JFrame frame;
     JPanel panel;
     static JPanel legend;
     static JSlider[] pricefilterSlider;
@@ -45,7 +45,7 @@ public class GUI {
         topPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         frame.add(topPanel, BorderLayout.NORTH);
 
-        user = new Account(new String[] { "Configs", "Login" });
+        user = new Account(new String[] { "Configs", "Login", "Register" });
         topPanel.add(user);
 
         checkCompatibilityButton = new JButton("Check Compatibility");

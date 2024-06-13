@@ -116,16 +116,29 @@ public class SQLManager {
         }
     }
 
-    static public int getAccount(String username) {
+    static public Object[] getCredentials(String email, int password) {
+        if (getAccount(email) != password) {
+            return null;
+        }
         try {
-            ps = con.prepareStatement("SELECT password FROM user WHERE name = ?");
-            ps.setString(1, username);
+            ResultSet Id = ps.executeQuery("SELECT userID, name FROM user WHERE email = " + email);
+            return new Object[] { Id.getInt("userID"), Id.getString("name") };
+
+        } catch (SQLException e) {
+            return null;
+        }
+    }
+
+    static public int getAccount(String email) {
+        try {
+            ps = con.prepareStatement("SELECT password FROM user WHERE email = " + email);
+            ps.setString(1, email);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                String password = rs.getString("password");
+                int password = rs.getInt("password");
                 ps.close();
                 rs.close();
-                return password.hashCode();
+                return password;
             } else {
                 ps.close();
                 rs.close();
@@ -135,5 +148,21 @@ public class SQLManager {
             e.printStackTrace();
             return 0;
         }
+    }
+
+    static public Boolean register(String username, String email, String password) throws EmailAlreadyExistsException {
+        try {
+            PreparedStatement checkEmails = con.prepareStatement("SELECT email FROM user WHERE email =" + email);
+            checkEmails.setString(1, email);
+            ResultSet checkEmail = checkEmails.executeQuery();
+            if (checkEmail.next()) {
+                throw new EmailAlreadyExistsException();
+            }
+            ps.execute("INSERT INTO user (username, email, password) VALUES (" + username + "," + email + ","
+                    + password.hashCode() + ")");
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
     }
 }

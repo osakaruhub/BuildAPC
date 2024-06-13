@@ -13,8 +13,7 @@ public class ConfigWindow extends JFrame {
     public ConfigWindow() {
         JScrollPane scrollPane = new JScrollPane(configTable);
         getContentPane().add(scrollPane);
-
-        this.setVisible(true);
+        GUI.frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 
     }
 

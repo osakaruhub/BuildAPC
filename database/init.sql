@@ -50,6 +50,7 @@ INSERT INTO brand (
 CREATE TABLE IF NOT EXISTS user (
   userID INT NOT NULL AUTO_INCREMENT,
   name VARCHAR(30) NOT NULL,
+  email VARCHAR(50) UNIQUE,
   password VARCHAR(25) NOT NULL,
   PRIMARY KEY (userID)
 );
@@ -516,7 +517,7 @@ INSERT INTO radiator (brandID, name, size, price) VALUES
   ((SELECT brand.ID FROM brand WHERE brand.name = 'Corsair'), 'Hydro X Series XR5 480mm', 480, 129);
 
 CREATE TABLE IF NOT EXISTS user_owned_config (
-  user INT NOT NULL,
+  userID INT NOT NULL,
   configID INT NOT NULL AUTO_INCREMENT,
   mainboard INT,
   ram INT,
@@ -529,8 +530,8 @@ CREATE TABLE IF NOT EXISTS user_owned_config (
   fan INT,
   radiator INT,
   cpu_cooler INT,
-  PRIMARY KEY (configID),
-  FOREIGN KEY (userID) REFERENCES user(userID),
+  PRIMARY KEY (configID, userID),
+  FOREIGN KEY (user) REFERENCES user(user),
   FOREIGN KEY (mainboard) REFERENCES mainboard(ID),
   FOREIGN KEY (ram) REFERENCES ram(ID),
   FOREIGN KEY (cpu) REFERENCES cpu(ID),
@@ -544,3 +545,6 @@ CREATE TABLE IF NOT EXISTS user_owned_config (
   FOREIGN KEY (cpu_cooler) REFERENCES cpu_cooler(ID)
 );
 
+CREATE USER IF NOT EXISTS admin IDENTIFIED BY 'verysafepassword';
+CREATE USER IF NOT EXISTS guest IDENTIFIED BY 'password';
+REVOKE DROP ON PC_Builder.* TO 'guest'@'localhost';

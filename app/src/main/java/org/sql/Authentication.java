@@ -2,6 +2,9 @@ package org.sql;
 
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
+
+import java.util.regex.Pattern;
+
 import javax.swing.JOptionPane;
 
 /**
@@ -25,15 +28,18 @@ public class Authentication {
     int option = JOptionPane.showConfirmDialog(null, message, "Authentication", JOptionPane.OK_CANCEL_OPTION);
 
     if (option == JOptionPane.OK_OPTION) {
-      String username = usernameField.getText();
+      String email = usernameField.getText();
       String password = new String(passwordField.getPassword());
-      if (username != "" && password != "" && isValidCredentials(username, password)) {
+      if (email != "" && password != "" && isValidCredentials(email, password)) {
         Authentication.loggedIn = true;
         JOptionPane.showMessageDialog(null, "Authentication successful!");
+        Session.changeSession(email, password.hashCode());
       } else {
         JOptionPane.showMessageDialog(null, "Invalid username or password.");
         return false;
       }
+    } else {
+      return false;
     }
     return true;
   }
@@ -41,7 +47,7 @@ public class Authentication {
   static public Boolean logout() {
     if (JOptionPane.showConfirmDialog(null, "Are you sure you want to logout?", "Authentication",
         JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-      Session.changeSession("guest", "password");
+      Session.changeSession("guest", 0);
       Authentication.loggedIn = false;
       return true;
     } else {
@@ -49,7 +55,35 @@ public class Authentication {
     }
   }
 
-  private static Boolean isValidCredentials(String username, String password) {
-    return SQLManager.getAccount(username) == password.hashCode();
+  public static Boolean register() {
+    JTextField usernameField = new JTextField();
+    JTextField emailField = new JTextField();
+    JPasswordField passwordField = new JPasswordField();
+
+    Object[] message = {
+        "Username:", usernameField,
+        "email:", emailField,
+        "Password:", passwordField
+    };
+
+    int option = JOptionPane.showConfirmDialog(null, message, "Authentication", JOptionPane.OK_CANCEL_OPTION);
+    if (option != JOptionPane.OK_OPTION
+        && !Pattern.matches("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$", emailField.getText())) { // check if
+                                                                                                          // email is
+                                                                                                          // pattern
+                                                                                                          // "*@*.*"
+      return false;
+    }
+    try {
+      return SQLManager.register(usernameField.getText(), emailField.getText(),
+          new String(passwordField.getPassword()));
+    } catch (Exception e) {
+      JOptionPane.showConfirmDialog(null, "Email Already Exists!", "Error", JOptionPane.OK_OPTION);
+      return false;
+    }
+  }
+
+  public static Boolean isValidCredentials(String email, String password) {
+    return SQLManager.getAccount(email) == password.hashCode();
   }
 }
