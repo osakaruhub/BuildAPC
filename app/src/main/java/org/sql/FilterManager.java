@@ -43,12 +43,12 @@ public class FilterManager {
         }
     }
 
-    public static void filterByValue(String type, String characteristic, Object value, Boolean out) {
+    public static Boolean filterByValue(String type, String characteristic, Object value, Boolean out) {
         String query = "SELECT " + type + ".ID FROM " + type + " WHERE " + type + "." + characteristic + " = " + value;
-        addFilter(new String[] { query }, type, out, comboBoxes, hardwareTypes, hardwareList);
+        return addFilter(new String[] { query }, type, out, comboBoxes, hardwareTypes, hardwareList);
     }
 
-    public static void filterByItem(String type, int ID, Boolean out) {
+    public static Boolean filterByItem(String type, int ID, Boolean out) {
         ArrayList<String> queries = new ArrayList<>();
         switch (type) {
             case "cpu":
@@ -83,10 +83,11 @@ public class FilterManager {
             default:
                 break;
         }
-        addFilter(queries.toArray(new String[0]), type, out, comboBoxes, hardwareTypes, hardwareList);
+        return addFilter(queries.toArray(new String[0]), type, out, comboBoxes, hardwareTypes, hardwareList);
     }
 
-    public static void addFilter(String[] queries, String type, Boolean out, ArrayList<JComboBox<Hardware>> comboboxes,
+    public static Boolean addFilter(String[] queries, String type, Boolean out,
+            ArrayList<JComboBox<Hardware>> comboboxes,
             List<String> hardwareTypes, Map<Integer, Hardware> hardwareList) {
         JComboBox<Hardware> temp = comboboxes.get(hardwareTypes.indexOf(type));
         try {
@@ -112,7 +113,9 @@ public class FilterManager {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
+        return true;
     }
 
     static public void checkWattage() {
