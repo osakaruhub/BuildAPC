@@ -6,6 +6,8 @@ import java.awt.event.MouseEvent;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import java.sql.*;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class ConfigWindow extends JFrame {
     private JTable configTable;
@@ -53,11 +55,17 @@ public class ConfigWindow extends JFrame {
                     // TODO: set current config from chosen saved config
                     ResultSet config = Session.getConfig(value, Session.getName());
 
-                    // App.setConfig(config.toString());
+                    Map<String, Integer> configd = new TreeMap<String, Integer>();
+                    try {
+                        for (String type : App.hardwareTypes) {
+                            configd.put(type, config.getInt(type));
+                        }
+                    } catch (SQLException SQL) { // TODO: handle exception }
+                        App.setConfig(configd);
+                    }
+
                 }
-
             }
-
         });
     }
 

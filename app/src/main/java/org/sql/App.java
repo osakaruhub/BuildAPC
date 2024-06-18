@@ -10,7 +10,7 @@ import javax.swing.*;
 public class App {
     static final List<String> hardwareTypes = List.of("mainboard", "cpu", "gpu", "ram", "psu", "ssd", "hdd", "ccase",
             "fan", "cpu_cooler", "radiator");
-    final GUI gui = new GUI();
+    static final GUI gui = new GUI();
 
     static Map<String, Integer> config = new TreeMap<>();
     static final Map<Integer, Hardware> hardwareList = new HashMap<>();
@@ -53,7 +53,7 @@ public class App {
                 cb.setAlignmentX(Component.CENTER_ALIGNMENT);
                 cb.setSelectedItem(null);
                 cb.addItemListener(new ChangeHardWare(hardwareType));
-                gui.comboBoxSearchable.add(new ComboBoxSearchable(cb));
+                gui.comboBoxSearchable.put(hardwareType, new ComboBoxSearchable(cb));
 
                 JPanel comboPanel = new JPanel();
                 comboPanel.setLayout(new BoxLayout(comboPanel, BoxLayout.X_AXIS));
@@ -76,6 +76,12 @@ public class App {
         gui.frame.setVisible(true);
     }
 
+    public static void setConfig(Map<String, Integer> config) {
+        App.config = config;
+        // gui.setConfigToBox();
+
+    }
+
     public void initConfig() {
         for (String hardWare : hardwareTypes) {
             config.put(hardWare, 0);
@@ -85,8 +91,9 @@ public class App {
     }
 
     public static void main(String[] args) {
-        // if (args[0] != null || args[1] != null && Authentication.isValidCredentials(args[0], args[1])) {
-        //     Session.changeSession(args[0], Integer.parseInt(args[1]));
+        // if (args[0] != null || args[1] != null &&
+        // Authentication.isValidCredentials(args[0], args[1])) {
+        // Session.changeSession(args[0], Integer.parseInt(args[1]));
         // }
         new App();
     }

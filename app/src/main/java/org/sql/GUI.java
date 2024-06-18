@@ -2,7 +2,6 @@ package org.sql;
 
 import com.jidesoft.swing.ComboBoxSearchable;
 import java.awt.*;
-import java.sql.SQLException;
 import java.util.*;
 import javax.swing.*;
 
@@ -13,14 +12,14 @@ public class GUI {
     static JSlider[] pricefilterSlider;
     static JButton checkCompatibilityButton;
     JPanel topPanel;
-    Account user;
+    Account accountBar;
     static ConfigWindow configWindow;
     ArrayList<JComboBox<Hardware>> comboboxes;
-    ArrayList<ComboBoxSearchable> comboBoxSearchable;
+    static Map<String, ComboBoxSearchable> comboBoxSearchable;
 
     public GUI() {
         comboboxes = new ArrayList<>();
-        comboBoxSearchable = new ArrayList<>();
+        comboBoxSearchable = new TreeMap<>();
         init();
     }
 
@@ -29,11 +28,28 @@ public class GUI {
         configWindow.setVisible(true);
     }
 
+    // static public void setConfigToBox(Map<String, Integer> config) {
+    // for (Map.Entry<String, ComboBoxSearchable> entry :
+    // comboBoxSearchable.entrySet()) {
+    //
+    // String type = entry.getKey();
+    //
+    // ComboBoxSearchable comboBoxSearchable = entry.getValue();
+    //
+    // Integer value = hardwareMap.get(type);
+    //
+    // // Set the cursor value of the ComboBoxSearchable
+    //
+    // comboBoxSearchable.setCursorValue(value);
+    //
+    // }
+    // }
+
     private void init() {
         frame = new JFrame("PC Builder");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(800, 600);
-        frame.setLayout(new BorderLayout());
+        frame.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 50));
 
         panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
@@ -45,8 +61,8 @@ public class GUI {
         topPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         frame.add(topPanel, BorderLayout.NORTH);
 
-        user = new Account(new String[] { "Configs", "Login", "Register" });
-        topPanel.add(user);
+        accountBar = new Account(new String[] { "Configs", "Login", "Register" });
+        topPanel.add(accountBar);
 
         checkCompatibilityButton = new JButton("Check Compatibility");
         frame.add(checkCompatibilityButton, BorderLayout.SOUTH);
