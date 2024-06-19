@@ -64,6 +64,7 @@ public class App {
                 comboPanel.add(cb);
 
                 gui.panel.add(comboPanel);
+                gui.panel.add(Box.createVerticalStrut(10));
                 gui.comboboxes.add(cb);
             }
             System.out.println(hardwareList.toString());
@@ -97,6 +98,6 @@ public class App {
         // Authentication.isValidCredentials(args[0], args[1])) {
         // Session.changeSession(args[0], Integer.parseInt(args[1]));
         // }
-        new App();
+        SwingUtilities.invokeLater(() -> new App());
     }
 }

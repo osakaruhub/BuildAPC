@@ -14,7 +14,7 @@ public class GUI {
     JPanel topPanel;
     Account accountBar;
     static ConfigWindow configWindow;
-    JTextField wattage;
+    JTextArea wattage;
     ArrayList<JComboBox<Hardware>> comboboxes;
     static Map<String, ComboBoxSearchable> comboBoxSearchable;
 
@@ -50,10 +50,11 @@ public class GUI {
         frame = new JFrame("PC Builder");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(800, 600);
-        frame.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 50));
+        frame.setLayout(new BorderLayout());
 
         panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        // panel.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 50));
 
         JScrollPane scrollPane = new JScrollPane(panel);
         frame.add(scrollPane, BorderLayout.CENTER);
@@ -62,8 +63,9 @@ public class GUI {
         topPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         frame.add(topPanel, BorderLayout.NORTH);
 
-        wattage = new JTextField();
-        wattage.setText("Your wattage is:\n 0");
+        wattage = new JTextArea();
+        wattage.setText("Your wattage is:\n0");
+        panel.add(wattage);
 
         accountBar = new Account(new String[] { "Configs", "Login", "Register" });
         topPanel.add(accountBar);
