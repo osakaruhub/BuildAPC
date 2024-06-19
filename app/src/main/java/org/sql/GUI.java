@@ -14,6 +14,7 @@ public class GUI {
     JPanel topPanel;
     Account accountBar;
     static ConfigWindow configWindow;
+    JTextField wattage;
     ArrayList<JComboBox<Hardware>> comboboxes;
     static Map<String, ComboBoxSearchable> comboBoxSearchable;
 
@@ -60,6 +61,9 @@ public class GUI {
         topPanel = new JPanel();
         topPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         frame.add(topPanel, BorderLayout.NORTH);
+
+        wattage = new JTextField();
+        wattage.setText("Your wattage is:\n 0");
 
         accountBar = new Account(new String[] { "Configs", "Login", "Register" });
         topPanel.add(accountBar);

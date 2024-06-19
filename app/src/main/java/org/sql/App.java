@@ -53,7 +53,9 @@ public class App {
                 cb.setAlignmentX(Component.CENTER_ALIGNMENT);
                 cb.setSelectedItem(null);
                 cb.addItemListener(new ChangeHardWare(hardwareType));
-                gui.comboBoxSearchable.put(hardwareType, new ComboBoxSearchable(cb));
+                ComboBoxSearchable cbs = new ComboBoxSearchable(cb);
+                cbs.setSearchingDelay(1);
+                gui.comboBoxSearchable.put(hardwareType,cbs);
 
                 JPanel comboPanel = new JPanel();
                 comboPanel.setLayout(new BoxLayout(comboPanel, BoxLayout.X_AXIS));
