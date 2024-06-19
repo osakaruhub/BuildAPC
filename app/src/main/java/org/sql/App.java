@@ -51,7 +51,12 @@ public class App {
                 cb.setMaximumSize(cb.getPreferredSize());
                 cb.setAlignmentX(Component.CENTER_ALIGNMENT);
                 cb.setSelectedItem(null);
+                if (hardwareType != "psu") {
+                    
                 cb.addItemListener(new ChangeHardWare(hardwareType));
+                } else { 
+                cb.addItemListener(new ChangePSU(hardwareType));
+                }
                 ComboBoxSearchable cbs = new ComboBoxSearchable(cb);
                 cbs.setSearchingDelay(1);
                 gui.comboBoxSearchable.put(hardwareType,cbs);

@@ -119,7 +119,13 @@ public class FilterManager {
     }
 
     static public void checkWattage() {
-        if (App.config.get("wattage") > App.config.get("psu")) {
+        int psuWattage = 0;
+        try {
+            rs = SQLManager.getConnection().prepareStatement("SELECT psu.wattage FROM psu").executeQuery();
+            psuWattage = rs.getInt("wattage");
+        } catch (SQLException e) {
+        }
+        if (App.config.get("wattage") > psuWattage) {
             JOptionPane.showMessageDialog(null, "PSU Overload",
                     "Your Config's power consumption is higher than your PSU can handle.\nconsider downgrading or using a better PSU",
                     JOptionPane.INFORMATION_MESSAGE);

@@ -15,6 +15,7 @@ public class GUI {
     Account accountBar;
     static ConfigWindow configWindow;
     JTextArea wattage;
+    static JList<String> reccomendations;
     ArrayList<JComboBox<Hardware>> comboboxes;
     static Map<String, ComboBoxSearchable> comboBoxSearchable;
 
@@ -66,6 +67,8 @@ public class GUI {
         wattage = new JTextArea();
         wattage.setText("Your wattage is:\n0");
         panel.add(wattage);
+
+        reccomendations = new JList<>();
 
         accountBar = new Account(new String[] { "Configs", "Login", "Register" });
         topPanel.add(accountBar);

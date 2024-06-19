@@ -5,7 +5,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -77,7 +76,7 @@ public class SQLManager {
     static public void add(String type, int ID) {
         try {
             ps = con.prepareStatement(
-                    "SELECT " + (type.equals("fan") || type.equals("gpu") ? type + ".tdp," : "") + type
+                    "SELECT " + (type.equals("cpu") || type.equals("gpu") ? type + ".tdp," : "") + type
                             + ".price FROM " + type
                             + " WHERE " + type + ".ID = ?");
             ps.setInt(1, ID);
@@ -152,15 +151,20 @@ public class SQLManager {
 
     static public Boolean register(String username, String email, String password) throws EmailAlreadyExistsException {
         try {
-            PreparedStatement checkEmails = con.prepareStatement("SELECT email FROM user WHERE email =" + email);
+            PreparedStatement checkEmails = con
+                    .prepareStatement("SELECT COUNT(*) FROM user WHERE email ='" + email + "'");
             checkEmails.setString(1, email);
             ResultSet checkEmail = checkEmails.executeQuery();
-            if (checkEmail.next()) {
+            checkEmail.next();
+            if (checkEmail.getInt(1) == 0) {
                 throw new EmailAlreadyExistsException();
             }
-            ps.execute("INSERT INTO user (username, email, password) VALUES (" + username + "," + email + ","
-                    + password.hashCode() + ")");
-        } catch (Exception e) {
+
+            ps = con.prepareStatement("INSERT INTO user (username, email, password) VALUES (" + username + "," + email
+                    + "," + password.hashCode() + ")");
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
             return false;
         }
         return true;

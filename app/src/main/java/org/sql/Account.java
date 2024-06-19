@@ -1,6 +1,7 @@
 package org.sql;
 
 import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
 
 public class Account extends JComboBox<String> {
   public Account(String[] opts) {
@@ -24,7 +25,9 @@ public class Account extends JComboBox<String> {
             this.addItem("Login");
           }
         case "Register":
-          Authentication.register();
+          JOptionPane.showMessageDialog(null,
+              Authentication.register() ? "Successfully Registered!" : "Registration failed", "Register",
+              JOptionPane.DEFAULT_OPTION);
           break;
         default:
           break;
