@@ -35,7 +35,6 @@ public class App {
             System.out.println("connected successfully");
             for (String hardwareType : hardwareTypes) {
                 String query = "SELECT name, price, ID FROM " + hardwareType;
-                System.out.println(query);
                 rs = SQLManager.getConnection().createStatement().executeQuery(query);
 
                 List<Hardware> choices = new ArrayList<>();
@@ -68,6 +67,7 @@ public class App {
                 gui.comboboxes.add(cb);
             }
             System.out.println(hardwareList.toString());
+        rs.close();
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         } catch (InterruptedException e) {

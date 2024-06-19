@@ -391,8 +391,10 @@ INSERT INTO ccase (
   ((SELECT brand.ID FROM brand WHERE brand.name = 'Corsair'), 'CORSAIR 2000D RGB AIRFLOW Mini-ITX PC Case - White', 'Mini ITX', 99);
 
 CREATE TABLE IF NOT EXISTS size (
-  name VARCHAR(20) NOT NULL,
-  size INT -- in cm
+  ID INT NOT NULL AUTO_INCREMENT,
+  name VARCHAR(20) NOT NULL UNIQUE,
+  size INT, -- in cm
+  PRIMARY KEY (ID)
 );
 
 INSERT INTO size (name, size) VALUES
