@@ -52,8 +52,9 @@ public class FilterManager {
         ArrayList<String> queries = new ArrayList<>();
         switch (type) {
             case "cpu":
-                queries.add("SELECT m.ID FROM mainboard m WHERE m.cpuForm <> (SELECT cpu.form FROM cpu WHERE cpu.ID = "
-                        + ID + ")");
+                queries.add(
+                        "SELECT m.ID FROM mainboard m WHERE m.name NOT LIKE '%' || (SELECT brand.name from brand, cpu where cpu.ID ="
+                                + ID + " ) || '%'");
                 break;
             case "ram":
                 queries.add(
@@ -63,13 +64,15 @@ public class FilterManager {
                         + ID + ")");
                 break;
             case "mainboard":
-                queries.add("SELECT cpu.ID FROM cpu WHERE cpu.form <> (SELECT m.form FROM mainboard m WHERE m.ID = "
-                        + ID + ")");
+                queries.add(
+                        "SELECT cpu.ID FROM cpu WHERE cpu.brandID <> (SELECT IF(m.name LIKE '%AMD', \"AMD\", \"Intel\") FROM mainboard m WHERE m.ID = "
+                                + ID + ")");
                 queries.add(
                         "SELECT ram.ID FROM ram WHERE ram.ddrType <> (SELECT m.ddrType FROM mainboard m WHERE m.ID = "
                                 + ID + ")");
-                queries.add("SELECT c.ID FROM ccase c WHERE c.size < (SELECT m.size FROM mainboard m WHERE m.ID = " + ID
-                        + ")");
+                // queries.add("SELECT c.ID FROM ccase c WHERE c.size < (SELECT m.size FROM
+                // mainboard m WHERE m.ID = " + ID
+                // + ")");
                 break;
             case "ssd":
                 queries.add(

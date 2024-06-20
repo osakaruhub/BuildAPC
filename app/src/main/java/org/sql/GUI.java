@@ -48,6 +48,7 @@ public class GUI {
     // }
 
     private void init() {
+
         frame = new JFrame("PC Builder");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(800, 600);

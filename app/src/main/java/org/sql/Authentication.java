@@ -74,6 +74,7 @@ public class Authentication {
       // return false;
       // }
       try {
+        System.out.println("this");
         return SQLManager.register(usernameField.getText(), emailField.getText(),
             new String(passwordField.getPassword()));
       } catch (EmailAlreadyExistsException e) {

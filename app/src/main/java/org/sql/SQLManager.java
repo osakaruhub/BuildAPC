@@ -74,44 +74,86 @@ public class SQLManager {
     }
 
     static public void add(String type, int ID) {
-        try {
-            ps = con.prepareStatement(
-                    "SELECT " + (type.equals("cpu") || type.equals("gpu") ? type + ".tdp," : "") + type
-                            + ".price FROM " + type
-                            + " WHERE " + type + ".ID = ?");
-            ps.setInt(1, ID);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                int wattage = rs.getInt("tdp");
-                int price = rs.getInt("price");
-                config.put("wattage", config.getOrDefault("wattage", 0) + wattage);
-                config.put("price", config.getOrDefault("price", 0) - price);
+        if (type.equals("cpu") || type.equals("gpu")) {
+            try {
+                ps = con.prepareStatement(
+                        "SELECT " + type + ".tdp, " + type
+                                + ".price FROM " + type
+                                + " WHERE " + type + ".ID = ?");
+                ps.setInt(1, ID);
+                ResultSet rs = ps.executeQuery();
+                if (rs.next()) {
+                    int wattage = rs.getInt("tdp");
+                    int price = rs.getInt("price");
+                    config.put("wattage", config.getOrDefault("wattage", 0) + wattage);
+                    config.put("price", config.getOrDefault("price", 0) - price);
+                }
+                ps.close();
+                rs.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
-            ps.close();
-            rs.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } else {
+
+            try {
+                ps = con.prepareStatement(
+                        "SELECT " + type
+                                + ".price FROM " + type
+                                + " WHERE " + type + ".ID = ?");
+                ps.setInt(1, ID);
+                ResultSet rs = ps.executeQuery();
+                if (rs.next()) {
+                    int price = rs.getInt("price");
+                    config.put("price", config.getOrDefault("price", 0) - price);
+                }
+                ps.close();
+                rs.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     static public void remove(String type, int ID) {
-        try {
-            ps = con.prepareStatement(
-                    "SELECT " + (type.equals("cpu") || type.equals("gpu") ? type + ".tdp," : "") + type
-                            + ".price FROM " + type
-                            + " WHERE " + type + ".ID = ?");
-            ps.setInt(1, ID);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                int wattage = rs.getInt("tdp");
-                int price = rs.getInt("price");
-                config.put("wattage", config.getOrDefault("wattage", 0) - wattage);
-                config.put("price", config.getOrDefault("price", 0) - price);
+        if (type.equals("cpu") || type.equals("gpu")) {
+            try {
+                ps = con.prepareStatement(
+                        "SELECT " + type + ".tdp,"
+                                + ".price FROM " + type
+                                + " WHERE " + type + ".ID = ?");
+                ps.setInt(1, ID);
+                ResultSet rs = ps.executeQuery();
+                if (rs.next()) {
+                    int wattage = rs.getInt("tdp");
+                    int price = rs.getInt("price");
+                    config.put("wattage", config.getOrDefault("wattage", 0) - wattage);
+                    config.put("price", config.getOrDefault("price", 0) - price);
+                }
+                ps.close();
+                rs.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
-            ps.close();
-            rs.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
+
+        } else {
+            try {
+                ps = con.prepareStatement(
+                        "SELECT " + (type.equals("cpu") || type.equals("gpu") ? type + ".tdp," : "") + type
+                                + ".price FROM " + type
+                                + " WHERE " + type + ".ID = ?");
+                ps.setInt(1, ID);
+                ResultSet rs = ps.executeQuery();
+                if (rs.next()) {
+                    int wattage = rs.getInt("tdp");
+                    int price = rs.getInt("price");
+                    config.put("wattage", config.getOrDefault("wattage", 0) - wattage);
+                    config.put("price", config.getOrDefault("price", 0) - price);
+                }
+                ps.close();
+                rs.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -156,12 +198,12 @@ public class SQLManager {
             checkEmails.setString(1, email);
             ResultSet checkEmail = checkEmails.executeQuery();
             checkEmail.next();
-            if (checkEmail.getInt(1) == 0) {
+            if (checkEmail.getInt(1) != 0) {
                 throw new EmailAlreadyExistsException();
             }
 
-            ps = con.prepareStatement("INSERT INTO user (username, email, password) VALUES (" + username + "," + email
-                    + "," + password.hashCode() + ")");
+            ps = con.prepareStatement("INSERT INTO user (name, email, password) VALUES ('" + username + "','" + email
+                    + "','" + password.hashCode() + "')");
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();

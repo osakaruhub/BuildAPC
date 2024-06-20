@@ -50,6 +50,7 @@ INSERT INTO brand (
 CREATE TABLE IF NOT EXISTS user (
   userID INT NOT NULL AUTO_INCREMENT,
   name VARCHAR(30) NOT NULL,
+  email VARCHAR(50) UNIQUE,
   password VARCHAR(25) NOT NULL,
   PRIMARY KEY (userID)
 );
@@ -59,8 +60,8 @@ CREATE TABLE IF NOT EXISTS mainboard (
   name VARCHAR(50),
   brandID INT NOT NULL,
   chipset VARCHAR(50),
+  ddrType INT,
   form VARCHAR(10),
-  ethernet_speed INT, -- in MB/s
   IO VARCHAR(255), -- CSV for ports e.g., "USB 2.0, USB 3.0"
   other_features VARCHAR(255),
   price INT,
@@ -68,26 +69,22 @@ CREATE TABLE IF NOT EXISTS mainboard (
   FOREIGN KEY (brandID) REFERENCES brand (ID)
 );
 
-INSERT INTO mainboard (name, brandID, chipset, form, IO, other_features, price)
+INSERT INTO mainboard (name, brandID, chipset, ddrType, form, IO, other_features, price)
 VALUES
-  ('MSI MEG Z590 Ace', (SELECT ID FROM brand WHERE name = 'MSI'), 'Intel Z590', 'ATX', 'USB 3.2 Gen 2x2, Thunderbolt 4, HDMI, DisplayPort, Ethernet 2.5Gbps', 'ALC4082 audio, RGB lighting, AI overclocking', 499),
-  ('Asus ROG Strix Z590-I', (SELECT ID FROM brand WHERE name = 'ASUS'), 'Intel Z590', 'Mini-ITX', 'USB 3.2 Gen 2, HDMI, DisplayPort, Ethernet 2.5Gbps', 'AI cooling, Aura Sync RGB lighting', 299),
-  ('ASRock X570 Phantom Gaming X', (SELECT ID FROM brand WHERE name = 'ASRock'), 'AMD X570', 'ATX', 'USB 3.2 Gen 2, HDMI, Ethernet 2.5Gbps', 'Polychrome SYNC, Super Alloy', 349),
-  ('Gigabyte Aorus X570 Master', (SELECT ID FROM brand WHERE name = 'Gigabyte'), 'AMD X570', 'ATX', 'USB 3.2 Gen 2, HDMI, DisplayPort, Ethernet 2.5Gbps', 'RGB Fusion 2.0, Q-Flash Plus', 299),
-  ('MSI MAG Z790 Tomahawk WiFi', (SELECT ID FROM brand WHERE name = 'MSI'), 'Intel Z790', 'ATX', 'USB 3.2 Gen 2x2, HDMI, DisplayPort, Ethernet 2.5Gbps', 'DDR5 support, AI cooling', 319),
-  ('Gigabyte Z790 Aorus Master', (SELECT ID FROM brand WHERE name = 'Gigabyte'), 'Intel Z790', 'ATX', 'HDMI, DP, USB 3.2 Gen 2, USB-C, Ethernet 2.5Gbps', 'PCIe 5.0, 5x M.2 slots, RAID support', 499),
-  ('ASUS ROG Strix X570-E Gaming', (SELECT ID FROM brand WHERE name = 'ASUS'), 'AMD X570', 'ATX', '7x USB 3.2 Gen 2 Type-A, 1x USB-C, HDMI, DisplayPort, Ethernet 2.5Gbps', 'PCIe 4.0, Wi-Fi, RGB connectors', 475),
-  ('ASUS ROG Maximus Z790 Hero', (SELECT ID FROM brand WHERE name = 'ASUS'), 'Intel Z790', 'ATX', 'USB 3.2 Gen 2, USB-C, HDMI, Ethernet 10Gbps', 'PCIe 5.0, VRMs, Water Cooling Support', 599),
-  ('MSI MPG B550 Gaming Edge WiFi', (SELECT ID FROM brand WHERE name = 'MSI'), 'AMD B550', 'ATX', 'USB 3.2 Gen 2, HDMI, DisplayPort, Ethernet 1Gbps', 'WiFi 6, RGB Fusion', 219),
-  ('ASRock B450 Steel Legend', (SELECT ID FROM brand WHERE name = 'ASRock'), 'AMD B450', 'ATX', 'USB 3.1 Gen 2, HDMI, Ethernet 1Gbps', 'Polychrome SYNC, Steel Armor', 129),
-  ('Gigabyte B550 Aorus Pro', (SELECT ID FROM brand WHERE name = 'Gigabyte'), 'AMD B550', 'ATX', 'USB 3.2 Gen 2, HDMI, DisplayPort, Ethernet 1Gbps', 'RGB Fusion 2.0, Q-Flash Plus', 189),
-  ('ASUS Prime B450M-A', (SELECT ID FROM brand WHERE name = 'ASUS'), 'AMD B450', 'Micro-ATX', 'USB 3.1 Gen 1, HDMI, DVI, Ethernet 1Gbps', 'Aura Sync, AI Suite 3', 89),
-  ('MSI B450 TOMAHAWK MAX', (SELECT ID FROM brand WHERE name = 'MSI'), 'AMD B450', 'ATX', 'USB 3.2 Gen 2, HDMI, DVI, Ethernet 1Gbps', 'Flash BIOS Button, Extended Heatsink Design', 119
+  ('MSI MEG Z590 Ace', (SELECT ID FROM brand WHERE name = 'MSI'), 'Intel Z590','4', 'ATX', 'USB 3.2 Gen 2x2,Thunderbolt 4,HDMI,DisplayPort, Ethernet 2.5Gbps', 'ALC4082 audio,RGB lighting,AI overclocking', 499),
+  ('Asus ROG Strix Z590-I', (SELECT ID FROM brand WHERE name = 'ASUS'), 'Intel Z590', '4', 'Mini-ITX', 'USB 3.2 Gen 2,HDMI,DisplayPort,Ethernet 2.5Gbps', 'AI cooling,Aura Sync RGB lighting', 299),
+  ('ASRock X570 Phantom Gaming X', (SELECT ID FROM brand WHERE name = 'ASRock'), 'AMD X570','4', 'ATX', 'USB 3.2 Gen 2, HDMI, Ethernet 2.5Gbps', 'Polychrome SYNC, Super Alloy', 349),
+  ('Gigabyte Aorus X570 Master', (SELECT ID FROM brand WHERE name = 'Gigabyte'), 'AMD X570','4', 'ATX', 'USB 3.2 Gen 2, HDMI, DisplayPort,Ethernet 2.5Gbps', 'RGB Fusion 2.0,Q-Flash Plus', 299),
+  ('MSI MAG Z790 Tomahawk WiFi', (SELECT ID FROM brand WHERE name = 'MSI'), 'Intel Z790','5', 'ATX', 'USB 3.2 Gen 2x2, HDMI, DisplayPort, Ethernet 2.5Gbps', 'DDR5 support,AI cooling', 319),
+  ('Gigabyte Z790 Aorus Master', (SELECT ID FROM brand WHERE name = 'Gigabyte'), 'Intel Z790', '5', 'ATX', 'HDMI,DP,USB 3.2 Gen 2,USB-C,Ethernet 2.5Gbps', 'PCIe 5.0,5x M.2 slots,RAID support', 499),
+  ('ASUS ROG Strix X570-E Gaming', (SELECT ID FROM brand WHERE name = 'ASUS'), 'AMD X570','4', 'ATX', '7x USB 3.2 Gen 2 Type-A,1x USB-C,HDMI,DisplayPort,Ethernet 2.5Gbps', 'PCIe 4.0,Wi-Fi,RGB connectors', 475),
+  ('ASUS ROG Maximus Z790 Hero', (SELECT ID FROM brand WHERE name = 'ASUS'), 'Intel Z790','5', 'ATX', 'USB 3.2 Gen 2,USB-C,HDMI,Ethernet 10Gbps', 'PCIe 5.0,VRMs,Water Cooling Support', 599),
+  ('MSI MPG B550 Gaming Edge WiFi', (SELECT ID FROM brand WHERE name = 'MSI'), 'AMD B550','4', 'ATX', 'USB 3.2 Gen 2,HDMI,DisplayPort,Ethernet 1Gbps', 'WiFi 6,RGB Fusion', 219),
+  ('ASRock B450 Steel Legend', (SELECT ID FROM brand WHERE name = 'ASRock'), 'AMD B450','4', 'ATX', 'USB 3.1 Gen 2,HDMI,Ethernet 1Gbps', 'Polychrome SYNC,Steel Armor', 129),
+  ('Gigabyte B550 Aorus Pro', (SELECT ID FROM brand WHERE name = 'Gigabyte'), 'AMD B550','4', 'ATX', 'USB 3.2 Gen 2,HDMI,DisplayPort,Ethernet 1Gbps', 'RGB Fusion 2.0,Q-Flash Plus', 189),
+  ('ASUS Prime B450M-A', (SELECT ID FROM brand WHERE name = 'ASUS'), 'AMD B450','4', 'Micro-ATX', 'USB 3.1 Gen 1,HDMI,DVI,Ethernet 1Gbps', 'Aura Sync,AI Suite 3', 89),
+  ('MSI B450 TOMAHAWK MAX', (SELECT ID FROM brand WHERE name = 'MSI'), 'AMD B450','4', 'ATX', 'USB 3.2 Gen 2,HDMI,DVI,Ethernet 1Gbps', 'Flash BIOS Button,Extended Heatsink Design', 119
   );
-
-
-
-
 
 CREATE TABLE IF NOT EXISTS cpu (
   ID INT NOT NULL AUTO_INCREMENT,
@@ -183,14 +180,14 @@ CREATE TABLE IF NOT EXISTS ram (
   capacity INT, -- in gb
   clock_speed INT,
   timing VARCHAR(10),
-  ddr_type VARCHAR(50),
+  ddrType VARCHAR(50),
   price INT,
   PRIMARY KEY (ID),
   FOREIGN KEY (brandID) REFERENCES brand (ID)
 );
 
 INSERT INTO ram (
-  brandID, name, capacity, clock_speed, timing, ddr_type, price
+  brandID, name, capacity, clock_speed, timing, ddrType, price
 ) VALUES
   ((SELECT brand.ID FROM brand WHERE brand.name = 'Corsair'), 'Vengeance LPX (2 x 16GB) DDR4 3200MHz C16', 32, 3200, 'C16', 'DDR4', 85),
   ((SELECT brand.ID FROM brand WHERE brand.name = 'Corsair'), 'Vengeance RGB Pro', 16, 3600, 'C18', 'DDR4', 90),
@@ -553,7 +550,7 @@ CREATE TABLE IF NOT EXISTS user_owned_config (
   fan INT,
   radiator INT,
   cpu_cooler INT,
-  PRIMARY KEY (userID, configID),
+  PRIMARY KEY (configID),
   FOREIGN KEY (userID) REFERENCES user(userID),
   FOREIGN KEY (mainboard) REFERENCES mainboard(ID),
   FOREIGN KEY (ram) REFERENCES ram(ID),

@@ -1,7 +1,6 @@
 package org.sql;
 
 import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 
 public class ChangePSU extends ChangeHardWare {
     String type;
