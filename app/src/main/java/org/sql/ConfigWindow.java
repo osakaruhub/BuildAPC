@@ -11,12 +11,16 @@ import java.util.TreeMap;
 
 public class ConfigWindow extends JFrame {
     private JTable configTable;
+    private JButton saveButton;
 
     public ConfigWindow() {
+        super();
         JScrollPane scrollPane = new JScrollPane(configTable);
         getContentPane().add(scrollPane);
-        GUI.frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-
+        saveButton = new JButton("save current config");
+        saveButton.addActionListener(e -> save());
+        this.add(saveButton);
+        this.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
     }
 
     public void DisplayConfigs() {
@@ -52,7 +56,6 @@ public class ConfigWindow extends JFrame {
 
                     System.out.println("Clicked on cell: " + value);
 
-                    // TODO: set current config from chosen saved config
                     ResultSet config = Session.getConfig(value, Session.getName());
 
                     Map<String, Integer> configd = new TreeMap<String, Integer>();
@@ -63,10 +66,10 @@ public class ConfigWindow extends JFrame {
                     } catch (SQLException SQL) { // TODO: handle exception }
                         App.setConfig(configd);
                     }
-
                 }
             }
         });
+        this.pack();
     }
 
     public Boolean save() {
@@ -76,7 +79,7 @@ public class ConfigWindow extends JFrame {
                 "name:", nameField,
         };
 
-        int option = JOptionPane.showConfirmDialog(null, message, "Authentication", JOptionPane.OK_CANCEL_OPTION);
+        int option = JOptionPane.showConfirmDialog(null, message, "save", JOptionPane.OK_CANCEL_OPTION);
 
         if (option == JOptionPane.OK_OPTION) {
             Boolean cancel = true;

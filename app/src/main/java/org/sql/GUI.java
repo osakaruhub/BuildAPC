@@ -18,6 +18,8 @@ public class GUI {
     static JList<String> reccomendations;
     ArrayList<JComboBox<Hardware>> comboboxes;
     static Map<String, ComboBoxSearchable> comboBoxSearchable;
+static JLabel wattageLabel;
+static JLabel priceLabel;
 
     public GUI() {
         comboboxes = new ArrayList<>();
@@ -56,23 +58,22 @@ public class GUI {
 
         panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        // panel.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 50));
-
         JScrollPane scrollPane = new JScrollPane(panel);
         frame.add(scrollPane, BorderLayout.CENTER);
 
         topPanel = new JPanel();
         topPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-        frame.add(topPanel, BorderLayout.NORTH);
 
-        wattage = new JTextArea();
-        wattage.setText("Your wattage is:\n0");
-        panel.add(wattage);
+        wattageLabel = new JLabel(String.format("Wattage: %d", 0));
 
-        reccomendations = new JList<>();
+        priceLabel = new JLabel(String.format("price: %d", 0));
+
+        topPanel.add(wattageLabel, BorderLayout.EAST);
+        topPanel.add(priceLabel, BorderLayout.EAST);
 
         accountBar = new Account(new String[] { "Configs", "Login", "Register" });
         topPanel.add(accountBar);
+        frame.add(topPanel, BorderLayout.NORTH);
 
         checkCompatibilityButton = new JButton("Check Compatibility");
         frame.add(checkCompatibilityButton, BorderLayout.SOUTH);
@@ -80,4 +81,12 @@ public class GUI {
         configWindow = new ConfigWindow();
     }
 
+    
+    static public void updatePriceLabel() {
+        priceLabel.setText(String.format("Price: %d", App.config.get("wattage")));
+    }
+
+    static public void updateWattageLabel() {
+        wattageLabel.setText(String.format("Wattage: %d", App.config.get("wattage")));
+    }
 }

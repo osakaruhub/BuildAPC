@@ -7,14 +7,14 @@ import javax.swing.*;
 public class FilterManager {
     private static List<String> hardwareTypes;
     private static ArrayList<JComboBox<Hardware>> comboBoxes;
-    private static Map<Integer, Hardware> hardwareList;
+    private static Map<Integer, Hardware> hardwareMap;
     static ResultSet rs;
 
     public FilterManager(List<String> hardwareTypes, ArrayList<JComboBox<Hardware>> comboboxes,
-            Map<Integer, Hardware> hardwareList) {
+            Map<Integer, Hardware> hardwareMap) {
         FilterManager.hardwareTypes = hardwareTypes;
         FilterManager.comboBoxes = comboboxes;
-        FilterManager.hardwareList = hardwareList;
+        FilterManager.hardwareMap = hardwareMap;
     }
 
     public void createFilters() {
@@ -45,7 +45,7 @@ public class FilterManager {
 
     public static Boolean filterByValue(String type, String characteristic, Object value, Boolean out) {
         String query = "SELECT " + type + ".ID FROM " + type + " WHERE " + type + "." + characteristic + " = " + value;
-        return addFilter(new String[] { query }, type, out, comboBoxes, hardwareTypes, hardwareList);
+        return addFilter(new String[] { query }, type, out, comboBoxes, hardwareTypes, hardwareMap);
     }
 
     public static Boolean filterByItem(String type, int ID, Boolean out) {
@@ -53,8 +53,8 @@ public class FilterManager {
         switch (type) {
             case "cpu":
                 queries.add(
-                        "SELECT m.ID FROM mainboard m WHERE m.name NOT LIKE '%' || (SELECT brand.name from brand, cpu where cpu.ID ="
-                                + ID + " ) || '%'");
+                        "SELECT m.ID FROM mainboard m, brand b WHERE m.name NOT LIKE CONCAT('%', (SELECT brand.name FROM brand WHERE brandID = (SELECT brandID FROM cpu WHERE ID = '"
+                                + ID + "') ), '%')");
                 break;
             case "ram":
                 queries.add(
@@ -65,7 +65,7 @@ public class FilterManager {
                 break;
             case "mainboard":
                 queries.add(
-                        "SELECT cpu.ID FROM cpu WHERE cpu.brandID <> (SELECT IF(m.name LIKE '%AMD', \"AMD\", \"Intel\") FROM mainboard m WHERE m.ID = "
+                        "SELECT cpu.ID FROM cpu WHERE cpu.brandID <> (SELECT IF(m.name LIKE '%AMD', \"Intel\", \"AMD\") FROM mainboard m WHERE m.ID = "
                                 + ID + ")");
                 queries.add(
                         "SELECT ram.ID FROM ram WHERE ram.ddrType <> (SELECT m.ddrType FROM mainboard m WHERE m.ID = "
@@ -86,19 +86,19 @@ public class FilterManager {
             default:
                 break;
         }
-        return addFilter(queries.toArray(new String[0]), type, out, comboBoxes, hardwareTypes, hardwareList);
+        return addFilter(queries.toArray(new String[0]), type, out, comboBoxes, hardwareTypes, hardwareMap);
     }
 
     public static Boolean addFilter(String[] queries, String type, Boolean out,
             ArrayList<JComboBox<Hardware>> comboboxes,
-            List<String> hardwareTypes, Map<Integer, Hardware> hardwareList) {
+            List<String> hardwareTypes, Map<Integer, Hardware> hardwareMap) {
         JComboBox<Hardware> temp = comboboxes.get(hardwareTypes.indexOf(type));
         try {
             if (out) {
                 for (String str : queries) {
                     rs = SQLManager.getConnection().prepareStatement(str).executeQuery();
                     while (rs.next()) {
-                        temp.removeItem(hardwareList.get(rs.getInt("ID")));
+                        temp.removeItem(hardwareMap.get(rs.getInt("ID")));
                     }
                 }
                 comboboxes.set(hardwareTypes.indexOf(type), temp);
@@ -110,7 +110,7 @@ public class FilterManager {
                 for (String str : queries) {
                     rs = SQLManager.getConnection().prepareStatement(str).executeQuery();
                     while (rs.next()) {
-                        tempHash.add(hardwareList.get(rs.getInt("ID")));
+                        tempHash.add(hardwareMap.get(rs.getInt("ID")));
                     }
                 }
             }

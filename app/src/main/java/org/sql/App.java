@@ -52,14 +52,14 @@ public class App {
                 cb.setAlignmentX(Component.CENTER_ALIGNMENT);
                 cb.setSelectedItem(null);
                 if (hardwareType != "psu") {
-                    
-                cb.addItemListener(new ChangeHardWare(hardwareType));
-                } else { 
-                cb.addItemListener(new ChangePSU(hardwareType));
+
+                    cb.addItemListener(new ChangeHardWare(hardwareType));
+                } else {
+                    cb.addItemListener(new ChangePSU(hardwareType));
                 }
                 ComboBoxSearchable cbs = new ComboBoxSearchable(cb);
                 cbs.setSearchingDelay(1);
-                gui.comboBoxSearchable.put(hardwareType,cbs);
+                gui.comboBoxSearchable.put(hardwareType, cbs);
 
                 JPanel comboPanel = new JPanel();
                 comboPanel.setLayout(new BoxLayout(comboPanel, BoxLayout.X_AXIS));
@@ -72,7 +72,7 @@ public class App {
                 gui.comboboxes.add(cb);
             }
             System.out.println(hardwareList.toString());
-        rs.close();
+            rs.close();
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         } catch (InterruptedException e) {
@@ -99,10 +99,16 @@ public class App {
     }
 
     public static void main(String[] args) {
-        // if (args[0] != null || args[1] != null &&
-        // Authentication.isValidCredentials(args[0], args[1])) {
-        // Session.changeSession(args[0], Integer.parseInt(args[1]));
-        // }
+        // for fancy people
+        if (args.length != 0 && args[0] != null && args[1] != null) {
+            if (Authentication.isValidCredentials(args[0], args[1])) {
+                Authentication.loggedIn = true;
+                JOptionPane.showMessageDialog(null, "Authentication successful!");
+                Session.changeSession(args[0], args[1].hashCode());
+            } else {
+                JOptionPane.showMessageDialog(null, "Invalid username or password.");
+            }
+        }
         SwingUtilities.invokeLater(() -> new App());
     }
 }

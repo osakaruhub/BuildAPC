@@ -24,7 +24,8 @@ public class Session {
     static public ResultSet getConfig(int id, String user) {
         try {
             return SQLManager.SessionConnection
-                    .prepareStatement("SELECT * from user_owned_config WHERE user = " + user + " AND configID = " + id)
+                    .prepareStatement(
+                            "SELECT * from user_owned_config WHERE user = '" + user + "' AND configID = " + id)
                     .executeQuery();
         } catch (SQLException e) {
             return null;

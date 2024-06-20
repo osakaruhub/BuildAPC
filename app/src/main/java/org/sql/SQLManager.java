@@ -65,8 +65,8 @@ public class SQLManager {
     static public ResultSet getConfigs(String user) {
         try {
             return getConnection().prepareStatement(
-                    ("SELECT * FROM user_owned_config WHERE userID = (SELECT userID from user WHERE name = " + user
-                            + " )"))
+                    ("SELECT * FROM user_owned_config WHERE userID = (SELECT userID from user WHERE name = '" + user
+                            + "' )"))
                     .executeQuery();
         } catch (SQLException e) {
             return null;
@@ -112,6 +112,8 @@ public class SQLManager {
                 e.printStackTrace();
             }
         }
+        GUI.updatePriceLabel();
+        GUI.updateWattageLabel();
     }
 
     static public void remove(String type, int ID) {
@@ -155,24 +157,31 @@ public class SQLManager {
                 e.printStackTrace();
             }
         }
+        GUI.updatePriceLabel();
+        GUI.updateWattageLabel();
     }
 
     static public Object[] getCredentials(String email, int password) {
         if (getAccount(email) != password) {
-            return null;
+            System.out.println("Exception: password has bitflipped!");
         }
         try {
-            ResultSet Id = ps.executeQuery("SELECT userID, name FROM user WHERE email = " + email);
+            PreparedStatement ps = getConnection()
+                    .prepareStatement("SELECT userID, name FROM user WHERE email = '" + email + "'");
+            ResultSet Id = ps.executeQuery();
+            Id.next();
             return new Object[] { Id.getInt("userID"), Id.getString("name") };
 
         } catch (SQLException e) {
+            e.printStackTrace();
+            System.exit(0);
             return null;
         }
     }
 
     static public int getAccount(String email) {
         try {
-            ps = con.prepareStatement("SELECT password FROM user WHERE email = " + email);
+            ps = con.prepareStatement("SELECT password FROM user WHERE email = '" + email + "'");
             ps.setString(1, email);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
