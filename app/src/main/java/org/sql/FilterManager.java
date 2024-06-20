@@ -19,6 +19,14 @@ public class FilterManager {
 
     public void createFilters() {
         GUI.checkCompatibilityButton.addActionListener(e -> FilterManager.checkWattage());
+        GUI.filterButtons = new CheckBox[4];
+        GUI.filterButtons[0] = new CheckBox("cpu", "brand", "AMD");
+        GUI.filterButtons[1] = new CheckBox("cpu", "brand", "AMD");
+        GUI.filterButtons[2] = new CheckBox("mainboard", "ddrType", "4");
+        GUI.filterButtons[3] = new CheckBox("mainboard", "ddrType", "5");
+        for (CheckBox btn : GUI.filterButtons) {
+            btn.addItemListener(new Filter(btn.type, btn.filter, btn.value));
+        }
         JSlider[] priceFilterSlider = new JSlider[App.hardwareTypes.size()];
         try {
             for (int i = 0; i < priceFilterSlider.length; i++) {

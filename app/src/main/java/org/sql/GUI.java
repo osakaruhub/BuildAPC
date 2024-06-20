@@ -10,12 +10,11 @@ public class GUI {
     JPanel panel;
     static JPanel legend;
     static JSlider[] pricefilterSlider;
+    static CheckBox[] filterButtons;
     static JButton checkCompatibilityButton;
     JPanel topPanel;
     Account accountBar;
     static ConfigWindow configWindow;
-    JTextArea wattage;
-    static JList<String> reccomendations;
     ArrayList<JComboBox<Hardware>> comboboxes;
     static Map<String, ComboBoxSearchable> comboBoxSearchable;
 static JLabel wattageLabel;
