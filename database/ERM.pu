@@ -139,30 +139,29 @@ entity "radiator" {
   price : INT
 }
 
-mainboard "*" <-- "1" brand
-cpu "*" <-- "1" brand
-gpu "*" <-- "1" brand
-ram "*" <-- "1" brand
-psu "*" <-- "1" brand
-hdd "*" <-- "1" brand
-ssd "*" <-- "1" brand
-case "*" <-- "1" brand
-fan "*" <-- "1" brand
-cpu_cooler "*" <-- "1" brand
-radiator "*" <-- "1" brand
-mainboard "*" <-- "1" config :  0..1
-cpu "*" o-- config : 0..n
-gpu "*" o-- config : 0..n
-ram "*" o-- config : 0..n
-psu o-- config : 0..1
-hdd "*" o-- config : 0..n
-ssd  o-- config : 0..n
-case o-- config : 0..1
-fan o-- config : 0..n
-cpu_cooler o--  config : 0..n
-radiator o-- config : 0..1
-case o-- size : 1..n
-mainboard o-- size : 1..n
-user "1" *-- "n" config : 1..n
-
+mainboard -- "1" brand
+cpu -- "1" brand
+gpu -- "1" brand
+ram -- "1" brand
+psu -- "1" brand
+hdd -- "1" brand
+ssd -- "1" brand
+case -- "1" brand
+fan -- "1" brand
+cpu_cooler -- "1" brand
+radiator -- "1" brand
+mainboard -- "1" config
+cpu o-- config
+gpu o-- config
+ram o-- config
+psu o-- config
+hdd o-- config
+ssd o-- config
+case o-- config
+fan o-- config
+cpu_cooler o-- config
+radiator o-- config
+case o-- size
+mainboard o-- size
+user "1" *-- "n" config
 @enduml
